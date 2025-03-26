@@ -9,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-// src/main/java/com/seuprojeto/entity/User.java
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -80,14 +79,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public enum Role implements GrantedAuthority {
-        USER, ADMIN;
-
-        @Override
-        public String getAuthority() {
-            return "ROLE_" + name();
-        }
     }
 }
