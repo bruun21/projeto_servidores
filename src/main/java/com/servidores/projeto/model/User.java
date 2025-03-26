@@ -17,6 +17,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,6 +40,8 @@ public class User implements UserDetails {
     private String email;
 
     @Column(nullable = false)
+    @Size(min = 8, message = "Senha deve ter no mínimo 8 caracteres")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d).+$", message = "Senha deve conter pelo menos 1 letra maiúscula e 1 número")
     private String password;
 
     @Enumerated(EnumType.STRING)
