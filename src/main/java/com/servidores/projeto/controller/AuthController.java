@@ -1,5 +1,8 @@
 package com.servidores.projeto.controller;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,9 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.servidores.projeto.dto.AuthRequest;
 import com.servidores.projeto.dto.AuthResponse;
 import com.servidores.projeto.dto.RefreshTokenRequest;
+import com.servidores.projeto.dto.RoleDto;
+import com.servidores.projeto.dto.UserRequest;
+import com.servidores.projeto.exception.ApiRequestException;
+import com.servidores.projeto.exception.AuthException;
 import com.servidores.projeto.service.AuthService;
 
-import jakarta.security.auth.message.AuthException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -29,5 +35,34 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
         return ResponseEntity.ok(authService.refreshToken(request));
+    }
+
+    @PostMapping("/register")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> register(@Valid @RequestBody UserRequest request) {
+        try {
+            AuthResponse response = authService.register(request);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        } catch (ApiRequestException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro interno ao registrar usuário");
+        }
+    }
+
+    @PostMapping("/register-role")
+    @PreAuthorize("hasRole('ROLE_ADMIN')") // [[5]]
+    public ResponseEntity<?> createRole(@RequestBody RoleDto roleDto) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(authService.createRole(roleDto));
+        } catch (ApiRequestException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
+        }
     }
 }

@@ -8,5 +8,6 @@ import com.servidores.projeto.model.Role;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
     Optional<Role> findByName(String email);
+    boolean existsByName(String name);
 
 }

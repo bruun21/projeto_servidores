@@ -1,41 +1,53 @@
 package com.servidores.projeto.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.servidores.projeto.dto.AuthRequest;
 import com.servidores.projeto.dto.AuthResponse;
 import com.servidores.projeto.dto.RefreshTokenRequest;
+import com.servidores.projeto.dto.RoleDto;
+import com.servidores.projeto.dto.UserRequest;
+import com.servidores.projeto.exception.ApiRequestException;
+import com.servidores.projeto.exception.AuthException;
+import com.servidores.projeto.exception.NotFoundException;
 import com.servidores.projeto.exception.TokenRefreshException;
 import com.servidores.projeto.mapper.UserMapper;
+import com.servidores.projeto.model.Role;
 import com.servidores.projeto.model.User;
+import com.servidores.projeto.repository.RoleRepository;
 import com.servidores.projeto.repository.UserRepository;
 
-import jakarta.security.auth.message.AuthException;
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 
 @Service
 @Log4j2
 public class AuthService {
-
     private final UserRepository userRepository;
     private final JwtService jwtService;
-    @Autowired
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     public AuthService(UserRepository userRepository, JwtService jwtService,
-            AuthenticationManager authenticationManager, UserMapper userMapper) {
+            AuthenticationManager authenticationManager, UserMapper userMapper, PasswordEncoder passwordEncoder,
+            RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     public AuthResponse authenticate(AuthRequest request) throws AuthException {
@@ -91,5 +103,35 @@ public class AuthService {
                 refreshToken,
                 "Bearer",
                 userMapper.toResponse(user));
+    }
+
+    @Transactional
+    public AuthResponse register(UserRequest request) throws AuthException {
+        if (userRepository.existsByEmail(request.email())) {
+            throw new AuthException("Email já registrado");
+        }
+        Role role = roleRepository.findById(request.roleId())
+                .orElseThrow(() -> new NotFoundException("Role não encontrada"));
+        User newUser = User.builder()
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .role(role)
+                .enabled(true)
+                .build();
+
+        userRepository.save(newUser);
+
+        return authenticate(new AuthRequest(request.email(), request.password()));
+    }
+
+    @Transactional
+    public Role createRole(RoleDto request) {
+        if (roleRepository.existsByName(request.name())) {
+            throw new ApiRequestException(HttpStatus.CONFLICT, "Role com esse nome já existe");
+        }
+
+        Role role = new Role();
+        BeanUtils.copyProperties(request, role); // Copia campos do DTO para o model
+        return roleRepository.save(role);
     }
 }
