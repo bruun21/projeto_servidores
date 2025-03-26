@@ -1,0 +1,24 @@
+{"properties": [
+  {
+    "name": "app.security.jwt.secret",
+    "type": "java.lang.String",
+    "description": "Secret key para assinatura dos tokens JWT. Deve ser uma string segura com mínimo de 256 bits."
+  },
+  {
+    "name": "app.security.jwt.expiration-ms",
+    "type": "java.lang.Long",
+    "description": "Tempo de expiração do token em milissegundos. Padrão: 300000 (5 minutos).",
+    "defaultValue": 300000
+  },
+  {
+    "name": "app.security.jwt.refresh-window-ms",
+    "type": "java.lang.Long",
+    "description": "Janela de tempo permitida para renovação do token antes da expiração em milissegundos. Padrão: 240000 (4 minutos).",
+    "defaultValue": 240000
+  },
+  {
+    "name": "app.security.jwt.refresh-expiration-ms",
+    "type": "java.lang.Long",
+    "description": "A description for 'app.security.jwt.refresh-expiration-ms'"
+  }
+]}
