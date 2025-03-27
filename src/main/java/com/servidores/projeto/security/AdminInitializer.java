@@ -1,5 +1,6 @@
 package com.servidores.projeto.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -19,21 +20,43 @@ public class AdminInitializer implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
 
+    @Value("${admin.email}")
+    private String adminEmail;
+
+    @Value("${admin.password}")
+    private String adminPassword;
+
+    @Value("${admin.role.name}")
+    private String adminRoleName;
+
+    @Value("${admin.role.description}")
+    private String adminRoleDescription;
+
     @Override
     public void run(String... args) throws Exception {
-        if (roleRepository.count() == 0 && userRepository.count() == 0) {
-            Role role = new Role();
-            role.setName("ADMIN");
-            role.setDescription("Administradores do sistema");
-            roleRepository.save(role);
-
-            User admin = new User();
-            admin.setEmail("admin@email.com");
-            admin.setPassword(passwordEncoder.encode("Admin123"));
-            admin.setRole(role);
-            userRepository.save(admin);
+        if (shouldCreateAdmin()) {
+            Role role = createAdminRole();
+            createAdminUser(role);
             System.out.println("Usuário ADMIN criado com sucesso!");
-
         }
+    }
+
+    private boolean shouldCreateAdmin() {
+        return roleRepository.count() == 0 && userRepository.count() == 0;
+    }
+
+    private Role createAdminRole() {
+        Role role = new Role();
+        role.setName(adminRoleName);
+        role.setDescription(adminRoleDescription);
+        return roleRepository.save(role);
+    }
+
+    private void createAdminUser(Role role) {
+        User admin = new User();
+        admin.setEmail(adminEmail);
+        admin.setPassword(passwordEncoder.encode(adminPassword));
+        admin.setRole(role);
+        userRepository.save(admin);
     }
 }
