@@ -20,5 +20,6 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(ex.getMessage(), "TOKEN_REFRESH_ERROR"));
     }
 
-    public record ErrorResponse(String message, String errorCode) {}
+    public record ErrorResponse(String message, String errorCode) {
+    }
 }

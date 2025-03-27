@@ -24,7 +24,6 @@ public class JwtService {
     private final SecretKey secretKey;
     private final JwtParser jwtParser;
 
-
     public String generateAccessToken(UserDetails userDetails) {
         return buildToken(userDetails, jwtConfig.getExpirationMs(), "ACCESS");
     }
@@ -47,7 +46,7 @@ public class JwtService {
         try {
             Claims claims = extractAllClaims(token);
             return claims.get("token_type", String.class).equals("REFRESH") &&
-                   !isTokenExpired(token);
+                    !isTokenExpired(token);
         } catch (Exception e) {
             return false;
         }
