@@ -1,11 +1,11 @@
-package com.servidores.projeto.mapper;
+package com.servidores.projeto.security.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.servidores.projeto.dto.RoleDto;
-import com.servidores.projeto.dto.UserResponse;
-import com.servidores.projeto.model.Role;
-import com.servidores.projeto.model.User;
+import com.servidores.projeto.security.dto.RoleDto;
+import com.servidores.projeto.security.dto.UserResponse;
+import com.servidores.projeto.security.model.Role;
+import com.servidores.projeto.security.model.User;
 
 @Component
 public class UserMapper {

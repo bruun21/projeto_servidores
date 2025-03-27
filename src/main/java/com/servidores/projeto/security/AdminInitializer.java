@@ -5,10 +5,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.servidores.projeto.model.Role;
-import com.servidores.projeto.model.User;
-import com.servidores.projeto.repository.RoleRepository;
-import com.servidores.projeto.repository.UserRepository;
+import com.servidores.projeto.security.model.Role;
+import com.servidores.projeto.security.model.User;
+import com.servidores.projeto.security.repository.RoleRepository;
+import com.servidores.projeto.security.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

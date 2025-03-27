@@ -1,11 +1,11 @@
-package com.servidores.projeto.service;
+package com.servidores.projeto.security.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.servidores.projeto.repository.UserRepository;
+import com.servidores.projeto.security.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

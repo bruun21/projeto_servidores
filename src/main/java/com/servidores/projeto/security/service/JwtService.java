@@ -1,4 +1,4 @@
-package com.servidores.projeto.service;
+package com.servidores.projeto.security.service;
 
 import java.util.Date;
 import java.util.function.Function;
@@ -8,8 +8,8 @@ import javax.crypto.SecretKey;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.servidores.projeto.config.JwtConfig;
-import com.servidores.projeto.model.User;
+import com.servidores.projeto.security.config.JwtConfig;
+import com.servidores.projeto.security.model.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;

@@ -1,4 +1,4 @@
-package com.servidores.projeto.model;
+package com.servidores.projeto.security.model;
 
 import java.time.LocalDateTime;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package com.servidores.projeto.controller;
+package com.servidores.projeto.security.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.servidores.projeto.dto.AuthRequest;
-import com.servidores.projeto.dto.AuthResponse;
-import com.servidores.projeto.dto.RefreshTokenRequest;
-import com.servidores.projeto.dto.RoleDto;
-import com.servidores.projeto.dto.UserRequest;
-import com.servidores.projeto.exception.ApiRequestException;
-import com.servidores.projeto.exception.AuthException;
-import com.servidores.projeto.service.AuthService;
+import com.servidores.projeto.security.dto.AuthRequest;
+import com.servidores.projeto.security.dto.AuthResponse;
+import com.servidores.projeto.security.dto.RefreshTokenRequest;
+import com.servidores.projeto.security.dto.RoleDto;
+import com.servidores.projeto.security.dto.UserRequest;
+import com.servidores.projeto.security.exception.ApiRequestException;
+import com.servidores.projeto.security.exception.AuthException;
+import com.servidores.projeto.security.service.AuthService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

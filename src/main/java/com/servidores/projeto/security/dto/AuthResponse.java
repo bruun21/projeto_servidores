@@ -1,4 +1,4 @@
-package com.servidores.projeto.dto;
+package com.servidores.projeto.security.dto;
 
 public record AuthResponse(
     String accessToken,

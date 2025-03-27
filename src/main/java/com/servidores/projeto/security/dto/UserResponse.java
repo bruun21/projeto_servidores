@@ -1,4 +1,4 @@
-package com.servidores.projeto.dto;
+package com.servidores.projeto.security.dto;
 
 import java.time.LocalDateTime;
 

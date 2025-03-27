@@ -1,4 +1,4 @@
-package com.servidores.projeto.service;
+package com.servidores.projeto.security.service;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -11,20 +11,20 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.servidores.projeto.dto.AuthRequest;
-import com.servidores.projeto.dto.AuthResponse;
-import com.servidores.projeto.dto.RefreshTokenRequest;
-import com.servidores.projeto.dto.RoleDto;
-import com.servidores.projeto.dto.UserRequest;
-import com.servidores.projeto.exception.ApiRequestException;
-import com.servidores.projeto.exception.AuthException;
-import com.servidores.projeto.exception.NotFoundException;
-import com.servidores.projeto.exception.TokenRefreshException;
-import com.servidores.projeto.mapper.UserMapper;
-import com.servidores.projeto.model.Role;
-import com.servidores.projeto.model.User;
-import com.servidores.projeto.repository.RoleRepository;
-import com.servidores.projeto.repository.UserRepository;
+import com.servidores.projeto.security.dto.AuthRequest;
+import com.servidores.projeto.security.dto.AuthResponse;
+import com.servidores.projeto.security.dto.RefreshTokenRequest;
+import com.servidores.projeto.security.dto.RoleDto;
+import com.servidores.projeto.security.dto.UserRequest;
+import com.servidores.projeto.security.exception.ApiRequestException;
+import com.servidores.projeto.security.exception.AuthException;
+import com.servidores.projeto.security.exception.NotFoundException;
+import com.servidores.projeto.security.exception.TokenRefreshException;
+import com.servidores.projeto.security.mapper.UserMapper;
+import com.servidores.projeto.security.model.Role;
+import com.servidores.projeto.security.model.User;
+import com.servidores.projeto.security.repository.RoleRepository;
+import com.servidores.projeto.security.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;

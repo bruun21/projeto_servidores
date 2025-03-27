@@ -1,4 +1,4 @@
-package com.servidores.projeto.config;
+package com.servidores.projeto.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
