@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.servidores.projeto.commons.NotFoundException;
 import com.servidores.projeto.security.dto.AuthRequest;
 import com.servidores.projeto.security.dto.AuthResponse;
 import com.servidores.projeto.security.dto.RefreshTokenRequest;
@@ -18,7 +19,6 @@ import com.servidores.projeto.security.dto.RoleDto;
 import com.servidores.projeto.security.dto.UserRequest;
 import com.servidores.projeto.security.exception.ApiRequestException;
 import com.servidores.projeto.security.exception.AuthException;
-import com.servidores.projeto.security.exception.NotFoundException;
 import com.servidores.projeto.security.exception.TokenRefreshException;
 import com.servidores.projeto.security.mapper.UserMapper;
 import com.servidores.projeto.security.model.Role;

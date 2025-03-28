@@ -16,9 +16,15 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "pessoa")
+@Getter
+@Setter
+@Builder
 public class PessoaModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +47,7 @@ public class PessoaModel {
     private String pai;
 
     @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<FotoPessoaModel> fotos = new ArrayList<>();
 
     @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL)
@@ -50,11 +57,11 @@ public class PessoaModel {
     private ServidorEfetivoModel servidorEfetivo;
 
     @ManyToMany
+    @Builder.Default
     @JoinTable(name = "pessoa_endereco", joinColumns = @JoinColumn(name = "pes_id"), inverseJoinColumns = @JoinColumn(name = "end_id"))
     private List<EnderecoModel> enderecos = new ArrayList<>();
 
     @OneToMany(mappedBy = "pessoa")
+    @Builder.Default
     private List<LotacaoModel> lotacoes = new ArrayList<>();
-
-    // Getters e Setters
 }
