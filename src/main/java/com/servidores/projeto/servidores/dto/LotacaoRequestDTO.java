@@ -14,10 +14,10 @@ import lombok.Setter;
 @Builder
 public class LotacaoRequestDTO {
     @NotNull(message = "ID da Pessoa é obrigatório")
-    private Long pesId;
+    private Long pessoaId;
     
     @NotNull(message = "ID da Unidade é obrigatório")
-    private Long unidId;
+    private Long unidadeId;
     
     @NotNull(message = "Data de lotação é obrigatória")
     private LocalDate dataLotacao;
