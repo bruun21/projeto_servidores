@@ -4,9 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.servidores.projeto.commons.ModelNaoEncontradaException;
-import com.servidores.projeto.commons.NotFoundException;
 import com.servidores.projeto.commons.enums.ErrorType;
 import com.servidores.projeto.servidores.dto.ServidorEfetivoRequestDTO;
 import com.servidores.projeto.servidores.dto.ServidorEfetivoResponseDTO;
@@ -15,42 +15,35 @@ import com.servidores.projeto.servidores.model.ServidorEfetivoModel;
 import com.servidores.projeto.servidores.repository.PessoaRepository;
 import com.servidores.projeto.servidores.repository.ServidorEfetivoRepository;
 
-import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ServidorEfetivoService {
 
     private final ServidorEfetivoRepository servidorEfetivoRepository;
     private final PessoaRepository pessoaRepository;
     private final ModelMapper modelMapper;
 
-    public ServidorEfetivoService(ServidorEfetivoRepository servidorEfetivoRepository,
-            PessoaRepository pessoaRepository) {
-        this.servidorEfetivoRepository = servidorEfetivoRepository;
-        this.pessoaRepository = pessoaRepository;
-        this.modelMapper = new ModelMapper();
-    }
-
     @Transactional
     public Long create(ServidorEfetivoRequestDTO requestDTO) {
-        PessoaModel pessoa = pessoaRepository.findById(requestDTO.getPessoaId())
-                .orElseThrow(() -> new NotFoundException("Pessoa não encontrada"));
+        PessoaModel pessoa = buscarPessoaValidada(requestDTO.getPessoaId());
 
-        ServidorEfetivoModel servidorEfetivo = ServidorEfetivoModel.builder()
-                .id(pessoa.getId())
-                .pessoa(pessoa)
-                .matricula(requestDTO.getMatricula())
-                .build();
+        ServidorEfetivoModel servidorEfetivo = modelMapper.map(requestDTO, ServidorEfetivoModel.class);
+        servidorEfetivo.setPessoa(pessoa);
+
+        servidorEfetivo.setId(pessoa.getId());
 
         return servidorEfetivoRepository.save(servidorEfetivo).getId();
     }
 
+    @Transactional(readOnly = true)
     public ServidorEfetivoResponseDTO getById(Long id) {
-        return modelMapper.map(servidorEfetivoRepository.findById(id)
-                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.SERV_EFETIVO_NAO_ENCONTRADO, id)),
-                ServidorEfetivoResponseDTO.class);
+        return servidorEfetivoRepository.findById(id).map(s -> modelMapper.map(s, ServidorEfetivoResponseDTO.class))
+                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.SERV_EFETIVO_NAO_ENCONTRADO, id));
     }
 
+    @Transactional(readOnly = true)
     public Page<ServidorEfetivoResponseDTO> getAll(Pageable page) {
         return servidorEfetivoRepository.findAll(page)
                 .map(s -> modelMapper.map(s, ServidorEfetivoResponseDTO.class));
@@ -61,16 +54,24 @@ public class ServidorEfetivoService {
         ServidorEfetivoModel servidorEfetivo = servidorEfetivoRepository.findById(id)
                 .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.SERV_EFETIVO_NAO_ENCONTRADO, id));
 
-        servidorEfetivo.setMatricula(requestDTO.getMatricula());
-        servidorEfetivo = servidorEfetivoRepository.save(servidorEfetivo);
-        return modelMapper.map(servidorEfetivo, ServidorEfetivoResponseDTO.class);
+        modelMapper.map(requestDTO, servidorEfetivo);
+
+        if (requestDTO.getPessoaId() != null && !requestDTO.getPessoaId().equals(servidorEfetivo.getPessoa().getId())) {
+            PessoaModel novaPessoa = buscarPessoaValidada(requestDTO.getPessoaId());
+            servidorEfetivo.setPessoa(novaPessoa);
+        }
+        return modelMapper.map(servidorEfetivoRepository.save(servidorEfetivo), ServidorEfetivoResponseDTO.class);
     }
 
     @Transactional
     public void delete(Long id) {
-        if (!servidorEfetivoRepository.existsById(id)) {
-            throw new ModelNaoEncontradaException(ErrorType.SERV_EFETIVO_NAO_ENCONTRADO, id);
-        }
-        servidorEfetivoRepository.deleteById(id);
+        ServidorEfetivoModel servidor = servidorEfetivoRepository.findById(id)
+                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.SERV_EFETIVO_NAO_ENCONTRADO, id));
+        servidorEfetivoRepository.delete(servidor);
+    }
+
+    private PessoaModel buscarPessoaValidada(Long pessoaId) {
+        return pessoaRepository.findById(pessoaId)
+                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.PESSOA_NAO_ENCONTRADA, pessoaId));
     }
 }
