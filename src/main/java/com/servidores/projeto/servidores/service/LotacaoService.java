@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.servidores.projeto.commons.ModelNaoEncontradaException;
-import com.servidores.projeto.commons.NotFoundException;
 import com.servidores.projeto.commons.enums.ErrorType;
 import com.servidores.projeto.servidores.dto.LotacaoRequestDTO;
 import com.servidores.projeto.servidores.dto.LotacaoResponseDTO;
@@ -18,8 +17,10 @@ import com.servidores.projeto.servidores.repository.PessoaRepository;
 import com.servidores.projeto.servidores.repository.UnidadeRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class LotacaoService {
 
     private final LotacaoRepository lotacaoRepository;
@@ -27,28 +28,14 @@ public class LotacaoService {
     private final ModelMapper modelMapper;
     private final UnidadeRepository unidadeRepository;
 
-    public LotacaoService(LotacaoRepository lotacaoRepository,
-            PessoaRepository pessoaRepository) {
-        this.lotacaoRepository = lotacaoRepository;
-        this.pessoaRepository = pessoaRepository;
-        this.modelMapper = new ModelMapper();
-        this.unidadeRepository = null;
-    }
-
     @Transactional
     public Long create(LotacaoRequestDTO requestDTO) {
-        PessoaModel pessoa = pessoaRepository.findById(requestDTO.getPessoaId())
-                .orElseThrow(() -> new NotFoundException("Pessoa não encontrada"));
-        UnidadeModel unidadeModel = unidadeRepository.findById(requestDTO.getUnidadeId())
-                .orElseThrow(() -> new NotFoundException("Pessoa não encontrada"));
+        PessoaModel pessoa = buscarPessoaOuLancarExcecao(requestDTO.getPessoaId());
+        UnidadeModel unidade = buscarUnidadeOuLancarExcecao(requestDTO.getUnidadeId());
 
-        LotacaoModel lotacao = LotacaoModel.builder()
-                .id(pessoa.getId())
-                .dataLotacao(requestDTO.getDataLotacao())
-                .unidade(unidadeModel)
-                .portaria(requestDTO.getPortaria())
-                .pessoa(pessoa)
-                .build();
+        LotacaoModel lotacao = modelMapper.map(requestDTO, LotacaoModel.class);
+        lotacao.setPessoa(pessoa);
+        lotacao.setUnidade(unidade);
 
         return lotacaoRepository.save(lotacao).getId();
     }
@@ -69,7 +56,15 @@ public class LotacaoService {
         LotacaoModel lotacao = lotacaoRepository.findById(id)
                 .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.LOTACAO_NAO_ENCONTRADA, id));
 
-        // Atualize aqui os campos específicos
+        modelMapper.map(requestDTO, lotacao);
+
+        if (requestDTO.getPessoaId() != null) {
+            lotacao.setPessoa(buscarPessoaOuLancarExcecao(requestDTO.getPessoaId()));
+        }
+        if (requestDTO.getUnidadeId() != null) {
+            lotacao.setUnidade(buscarUnidadeOuLancarExcecao(requestDTO.getUnidadeId()));
+        }
+
         return modelMapper.map(lotacaoRepository.save(lotacao), LotacaoResponseDTO.class);
     }
 
@@ -79,5 +74,15 @@ public class LotacaoService {
             throw new ModelNaoEncontradaException(ErrorType.LOTACAO_NAO_ENCONTRADA, id);
         }
         lotacaoRepository.deleteById(id);
+    }
+
+    private PessoaModel buscarPessoaOuLancarExcecao(Long pessoaId) {
+        return pessoaRepository.findById(pessoaId)
+                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.PESSOA_NAO_ENCONTRADA, pessoaId));
+    }
+
+    private UnidadeModel buscarUnidadeOuLancarExcecao(Long unidadeId) {
+        return unidadeRepository.findById(unidadeId)
+                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.UNIDADE_NAO_ENCONTRADA, unidadeId));
     }
 }
