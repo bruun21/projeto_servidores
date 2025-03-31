@@ -1,5 +1,7 @@
 package com.servidores.projeto.servidores.service;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +11,9 @@ import com.servidores.projeto.commons.ModelNaoEncontradaException;
 import com.servidores.projeto.commons.enums.ErrorType;
 import com.servidores.projeto.servidores.dto.UnidadeRequestDTO;
 import com.servidores.projeto.servidores.dto.UnidadeResponseDTO;
+import com.servidores.projeto.servidores.model.EnderecoModel;
 import com.servidores.projeto.servidores.model.UnidadeModel;
+import com.servidores.projeto.servidores.repository.EnderecoRepository;
 import com.servidores.projeto.servidores.repository.UnidadeRepository;
 
 import jakarta.transaction.Transactional;
@@ -21,10 +25,22 @@ public class UnidadeService {
 
     private final UnidadeRepository unidadeRepository;
     private final ModelMapper modelMapper;
+    private final EnderecoRepository enderecoRepository;
 
     @Transactional
     public Long create(UnidadeRequestDTO requestDTO) {
-        return unidadeRepository.save(modelMapper.map(requestDTO, UnidadeModel.class)).getId();
+        UnidadeModel unidade = modelMapper.map(requestDTO, UnidadeModel.class);
+
+        List<EnderecoModel> enderecos = requestDTO.getIdEnderecos().stream()
+                .map(idEndereco -> enderecoRepository.findById(idEndereco)
+                        .orElseThrow(() -> new ModelNaoEncontradaException(
+                                ErrorType.ENDERECO_NAO_ENCONTRADO, idEndereco)))
+                .toList();
+
+        unidade.setEnderecos(enderecos);
+        unidade = unidadeRepository.save(unidade);
+
+        return unidade.getId();
     }
 
     public UnidadeResponseDTO getById(Long id) {
