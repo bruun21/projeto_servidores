@@ -5,8 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.servidores.projeto.commons.ModelNaoEncontradaException;
 import com.servidores.projeto.commons.enums.ErrorType;
+import com.servidores.projeto.commons.exceptions.ModelNaoEncontradaException;
 import com.servidores.projeto.servidores.cidade.dto.CidadeRequestDTO;
 import com.servidores.projeto.servidores.cidade.dto.CidadeResponseDTO;
 import com.servidores.projeto.servidores.cidade.model.CidadeModel;

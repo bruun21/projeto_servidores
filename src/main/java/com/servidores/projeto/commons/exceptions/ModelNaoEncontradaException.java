@@ -1,4 +1,4 @@
-package com.servidores.projeto.commons;
+package com.servidores.projeto.commons.exceptions;
 
 import com.servidores.projeto.commons.enums.ErrorType;
 

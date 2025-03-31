@@ -1,4 +1,4 @@
-package com.servidores.projeto.commons;
+package com.servidores.projeto.commons.exceptions;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

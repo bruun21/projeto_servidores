@@ -10,9 +10,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "foto_pessoa")
+@Getter
+@Setter
+@Builder
 public class FotoPessoaModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,5 +38,4 @@ public class FotoPessoaModel {
     @Column(name = "fp_hash", length = 50)
     private String hash;
 
-    // Getters e Setters
 }

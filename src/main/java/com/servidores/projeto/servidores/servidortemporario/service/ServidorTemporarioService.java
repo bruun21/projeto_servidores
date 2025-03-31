@@ -6,8 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.servidores.projeto.commons.ModelNaoEncontradaException;
 import com.servidores.projeto.commons.enums.ErrorType;
+import com.servidores.projeto.commons.exceptions.ModelNaoEncontradaException;
 import com.servidores.projeto.servidores.pessoa.model.PessoaModel;
 import com.servidores.projeto.servidores.pessoa.repository.PessoaRepository;
 import com.servidores.projeto.servidores.servidortemporario.dto.ServidorTemporarioRequestDTO;
