@@ -22,7 +22,7 @@ import com.servidores.projeto.servidores.endereco.service.EnderecoService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/enderecos")
+@RequestMapping("/endereco")
 @RequiredArgsConstructor
 public class EnderecoController {
 

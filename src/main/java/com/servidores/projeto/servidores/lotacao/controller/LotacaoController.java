@@ -22,7 +22,7 @@ import com.servidores.projeto.servidores.lotacao.service.LotacaoService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/lotacoes")
+@RequestMapping("/lotacao")
 @RequiredArgsConstructor
 public class LotacaoController {
 

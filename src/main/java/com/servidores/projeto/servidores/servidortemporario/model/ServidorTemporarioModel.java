@@ -1,6 +1,5 @@
 package com.servidores.projeto.servidores.servidortemporario.model;
 
-
 import java.time.LocalDate;
 
 import com.servidores.projeto.servidores.pessoa.model.PessoaModel;
@@ -22,10 +21,12 @@ import lombok.Setter;
 @Setter
 @Builder
 public class ServidorTemporarioModel {
+    @Id
+    @Column(name = "pes_id")
+    private Long id;
 
     @OneToOne
     @MapsId
-    @Id
     @JoinColumn(name = "pes_id")
     private PessoaModel pessoa;
 

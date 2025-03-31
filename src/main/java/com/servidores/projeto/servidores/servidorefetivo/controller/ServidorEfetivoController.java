@@ -22,7 +22,7 @@ import com.servidores.projeto.servidores.servidorefetivo.service.ServidorEfetivo
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/servidores-efetivos")
+@RequestMapping("/servidor-efetivo")
 @RequiredArgsConstructor
 public class ServidorEfetivoController {
 

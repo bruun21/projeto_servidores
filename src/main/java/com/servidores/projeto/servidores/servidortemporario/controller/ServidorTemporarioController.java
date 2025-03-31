@@ -22,7 +22,7 @@ import com.servidores.projeto.servidores.servidortemporario.service.ServidorTemp
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/servidores-temporarios")
+@RequestMapping("/servidor-temporario")
 @RequiredArgsConstructor
 public class ServidorTemporarioController {
 

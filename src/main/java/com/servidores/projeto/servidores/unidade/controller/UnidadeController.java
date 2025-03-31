@@ -22,7 +22,7 @@ import com.servidores.projeto.servidores.unidade.service.UnidadeService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/unidades")
+@RequestMapping("/unidade")
 @RequiredArgsConstructor
 public class UnidadeController {
 
