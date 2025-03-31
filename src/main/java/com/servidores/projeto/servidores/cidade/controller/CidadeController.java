@@ -22,7 +22,7 @@ import com.servidores.projeto.servidores.cidade.service.CidadeService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/cidades")
+@RequestMapping("/cidade")
 @RequiredArgsConstructor
 public class CidadeController {
 
