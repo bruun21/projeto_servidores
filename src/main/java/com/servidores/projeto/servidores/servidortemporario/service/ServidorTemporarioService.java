@@ -31,9 +31,8 @@ public class ServidorTemporarioService {
 
         ServidorTemporarioModel servidorTemporario = modelMapper.map(requestDTO, ServidorTemporarioModel.class);
         servidorTemporario.setPessoa(pessoa);
-        servidorTemporario.setId(pessoa.getId());
 
-        return servidorTemporarioRepository.save(servidorTemporario).getId();
+        return servidorTemporarioRepository.save(servidorTemporario).getPessoa().getId();
     }
 
     @Transactional(readOnly = true)

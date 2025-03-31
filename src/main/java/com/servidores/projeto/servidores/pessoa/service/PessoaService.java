@@ -2,15 +2,19 @@ package com.servidores.projeto.servidores.pessoa.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.servidores.projeto.commons.MinioService;
 import com.servidores.projeto.commons.enums.ErrorType;
+import com.servidores.projeto.commons.exceptions.FileStorageException;
 import com.servidores.projeto.commons.exceptions.ModelNaoEncontradaException;
 import com.servidores.projeto.servidores.endereco.model.EnderecoModel;
 import com.servidores.projeto.servidores.endereco.repository.EnderecoRepository;
@@ -21,6 +25,7 @@ import com.servidores.projeto.servidores.pessoa.model.PessoaModel;
 import com.servidores.projeto.servidores.pessoa.repository.FotoPessoaRepository;
 import com.servidores.projeto.servidores.pessoa.repository.PessoaRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -36,38 +41,13 @@ public class PessoaService {
 
     @Transactional
     public Long createPessoa(PessoaRequestDTO requestDTO) {
-        List<String> fotoHashes = null;
-        if (requestDTO.getFotos() != null && !requestDTO.getFotos().isEmpty()) {
-            fotoHashes = requestDTO.getFotos().stream()
-                    .map(minioService::uploadFile)
-                    .collect(Collectors.toList());
-        }
 
-        PessoaModel pessoa = PessoaModel.builder()
-       .nome(requestDTO.getNome())
-       .dataNascimento(requestDTO.getDataNascimento())
-       .sexo(requestDTO.getSexo())
-       .mae(requestDTO.getMae())
-       .pai(requestDTO.getPai())
-       .build();
+        final PessoaModel pessoa = buildPessoaFromRequest(requestDTO);
+        associateEnderecos(pessoa, requestDTO.getEnderecoIds());
 
-        List<EnderecoModel> enderecos = enderecoRepository.findAllById(requestDTO.getEnderecoIds());
-        pessoa.setEnderecos(enderecos);
+        pessoaRepository.save(pessoa);
 
-        pessoa = pessoaRepository.save(pessoa);
-
-        if (fotoHashes != null) {
-            for (String hash : fotoHashes) {
-                FotoPessoaModel foto = FotoPessoaModel.builder()
-                .pessoa(pessoa)
-                .data(LocalDate.now())
-                .bucket(MinioService.BUCKET_NAME)
-                .hash(hash)
-                .build();
-                fotoPessoaRepository.save(foto);
-                
-            }
-        }
+        processFotos(requestDTO, pessoa);
 
         return pessoa.getId();
     }
@@ -99,4 +79,83 @@ public class PessoaService {
         }
         pessoaRepository.deleteById(id);
     }
+
+    private PessoaModel buildPessoaFromRequest(PessoaRequestDTO requestDTO) {
+        return PessoaModel.builder()
+                .nome(requestDTO.getNome().trim())
+                .dataNascimento(requestDTO.getDataNascimento())
+                .sexo(requestDTO.getSexo())
+                .mae(requestDTO.getMae())
+                .pai(requestDTO.getPai())
+                .build();
+    }
+
+    private void associateEnderecos(PessoaModel pessoa, List<Long> enderecoIds) {
+        if (enderecoIds == null || enderecoIds.isEmpty()) {
+            return;
+        }
+
+        final List<EnderecoModel> enderecos = enderecoRepository.findAllById(enderecoIds);
+
+        if (enderecos.size() != enderecoIds.size()) {
+            final Set<Long> foundIds = enderecos.stream()
+                    .map(EnderecoModel::getId)
+                    .collect(Collectors.toSet());
+
+            final List<Long> missingIds = enderecoIds.stream()
+                    .filter(id -> !foundIds.contains(id))
+                    .collect(Collectors.toList());
+
+            throw new EntityNotFoundException("Endereços não encontrados: " + missingIds);
+        }
+
+        pessoa.setEnderecos(enderecos);
+    }
+
+    private void processFotos(PessoaRequestDTO requestDTO, PessoaModel pessoa) {
+        Optional.ofNullable(requestDTO.getFotos())
+                .filter(fotos -> !fotos.isEmpty())
+                .ifPresent(fotos -> {
+                    validateFotos(fotos);
+                    saveFotos(pessoa, fotos);
+                });
+    }
+
+    private void validateFotos(List<MultipartFile> fotos) {
+        fotos.forEach(foto -> {
+            if (foto.isEmpty()) {
+                throw new FileStorageException("Arquivo vazio recebido");
+            }
+            if (!foto.getContentType().startsWith("image/")) {
+                throw new FileStorageException("Tipo de arquivo inválido: " + foto.getContentType());
+            }
+        });
+    }
+
+    private void saveFotos(PessoaModel pessoa, List<MultipartFile> fotos) {
+        final List<FotoPessoaModel> fotoModels = fotos.stream()
+                .map(this::uploadFoto)
+                .map(minioKey -> buildFotoModel(pessoa, minioKey))
+                .collect(Collectors.toList());
+
+        fotoPessoaRepository.saveAll(fotoModels);
+    }
+
+    private String uploadFoto(MultipartFile foto) {
+        try {
+            return minioService.uploadFile(foto);
+        } catch (RuntimeException e) {
+            throw new FileStorageException("Erro ao salvar foto no storage");
+        }
+    }
+
+    private FotoPessoaModel buildFotoModel(PessoaModel pessoa, String minioKey) {
+        return FotoPessoaModel.builder()
+                .pessoa(pessoa)
+                .data(LocalDate.now())
+                .bucket(minioService.getBucketName())
+                .hash(minioKey)
+                .build();
+    }
+
 }
