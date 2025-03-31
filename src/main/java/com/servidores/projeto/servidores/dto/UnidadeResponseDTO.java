@@ -13,5 +13,5 @@ public class UnidadeResponseDTO {
     private Long id;
     private String nome;
     private String sigla;
-    List<EnderecoRespondeDTO> enderecos;
+    List<EnderecoResponseDTO> enderecos;
 }

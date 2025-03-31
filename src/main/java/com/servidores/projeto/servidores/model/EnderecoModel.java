@@ -12,9 +12,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "endereco")
+@Getter
+@Setter
+@Builder
 public class EnderecoModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,10 +44,11 @@ public class EnderecoModel {
     private CidadeModel cidade;
 
     @ManyToMany(mappedBy = "enderecos")
+    @Builder.Default
     private List<PessoaModel> pessoas = new ArrayList<>();
 
     @ManyToMany(mappedBy = "enderecos")
+    @Builder.Default
     private List<UnidadeModel> unidades = new ArrayList<>();
 
-    // Getters e Setters
 }

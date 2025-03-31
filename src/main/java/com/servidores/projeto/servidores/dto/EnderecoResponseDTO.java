@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class EnderecoRespondeDTO {
+public class EnderecoResponseDTO {
     private Long id;
 
     private String tipoLogradouro;
