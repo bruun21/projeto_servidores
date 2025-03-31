@@ -45,7 +45,7 @@ public class UnidadeService {
 
     public UnidadeResponseDTO getById(Long id) {
         return modelMapper.map(unidadeRepository.findById(id)
-                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.LOTACAO_NAO_ENCONTRADA, id)),
+                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.UNIDADE_NAO_ENCONTRADA, id)),
                 UnidadeResponseDTO.class);
     }
 
@@ -57,7 +57,7 @@ public class UnidadeService {
     @Transactional
     public UnidadeResponseDTO update(Long id, UnidadeRequestDTO requestDTO) {
         UnidadeModel unidade = unidadeRepository.findById(id)
-                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.LOTACAO_NAO_ENCONTRADA, id));
+                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.UNIDADE_NAO_ENCONTRADA, id));
 
         modelMapper.map(requestDTO, unidade);
         return modelMapper.map(unidadeRepository.save(unidade), UnidadeResponseDTO.class);
@@ -66,7 +66,7 @@ public class UnidadeService {
     @Transactional
     public void delete(Long id) {
         if (!unidadeRepository.existsById(id)) {
-            throw new ModelNaoEncontradaException(ErrorType.LOTACAO_NAO_ENCONTRADA, id);
+            throw new ModelNaoEncontradaException(ErrorType.UNIDADE_NAO_ENCONTRADA, id);
         }
         unidadeRepository.deleteById(id);
     }

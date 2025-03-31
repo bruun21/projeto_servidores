@@ -28,7 +28,7 @@ public class EnderecoService {
     @Transactional
     public Long create(EnderecoRequestDTO requestDTO) {
         CidadeModel cidade = cidadeRepository.findById(requestDTO.getCidadeId())
-                .orElseThrow(() -> new RuntimeException("Cidade não encontrada"));
+                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.CIDADE_NAO_ENCONTRADA, requestDTO.getCidadeId()));
 
         EnderecoModel endereco = modelMapper.map(requestDTO, EnderecoModel.class);
         endereco.setCidade(cidade);
@@ -38,7 +38,7 @@ public class EnderecoService {
 
     public EnderecoResponseDTO getById(Long id) {
         return modelMapper.map(enderecoRepository.findById(id)
-                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.LOTACAO_NAO_ENCONTRADA, id)),
+                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.ENDERECO_NAO_ENCONTRADO, id)),
                 EnderecoResponseDTO.class);
     }
 
@@ -50,7 +50,7 @@ public class EnderecoService {
     @Transactional
     public EnderecoResponseDTO update(Long id, EnderecoRequestDTO requestDTO) {
         EnderecoModel endereco = enderecoRepository.findById(id)
-                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.LOTACAO_NAO_ENCONTRADA, id));
+                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.ENDERECO_NAO_ENCONTRADO, id));
 
         modelMapper.map(requestDTO, endereco);
         return modelMapper.map(enderecoRepository.save(endereco), EnderecoResponseDTO.class);
@@ -59,7 +59,7 @@ public class EnderecoService {
     @Transactional
     public void delete(Long id) {
         if (!enderecoRepository.existsById(id)) {
-            throw new ModelNaoEncontradaException(ErrorType.LOTACAO_NAO_ENCONTRADA, id);
+            throw new ModelNaoEncontradaException(ErrorType.ENDERECO_NAO_ENCONTRADO, id);
         }
         enderecoRepository.deleteById(id);
     }
