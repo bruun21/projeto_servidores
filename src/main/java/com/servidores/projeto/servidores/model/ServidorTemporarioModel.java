@@ -10,9 +10,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "servidor_temporario")
+@Getter
+@Setter
+@Builder
 public class ServidorTemporarioModel {
     @Id
     @Column(name = "pes_id")

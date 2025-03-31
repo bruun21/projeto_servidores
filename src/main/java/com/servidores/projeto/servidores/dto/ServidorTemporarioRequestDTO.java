@@ -13,11 +13,10 @@ import lombok.Setter;
 public class ServidorTemporarioRequestDTO {
     @NotNull(message = "Data de admissão é obrigatória")
     private LocalDate dataAdmissao;
-    
+
     private LocalDate dataDemissao;
-    
+
     @NotNull(message = "ID da Pessoa é obrigatório")
-    private Long pesId;
+    private Long pessoaId;
 
 }
-
