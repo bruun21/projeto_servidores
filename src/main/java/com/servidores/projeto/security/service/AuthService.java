@@ -96,7 +96,7 @@ public class AuthService {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-        String newAccessToken = jwtService.generateToken(user);
+        String newAccessToken = jwtService.generateAccessToken(user);
 
         return new AuthResponse(
                 newAccessToken,

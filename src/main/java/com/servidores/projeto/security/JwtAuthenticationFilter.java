@@ -55,10 +55,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                    System.out.println("Autenticação bem-sucedida para usuário: " + userEmail);
+                    System.out.println("Autoridades: " + userDetails.getAuthorities());
+                } else {
+                    System.out.println("Token inválido para usuário: " + userEmail);
                 }
             }
         } catch (Exception e) {
-            // Tratamento de erro será implementado no passo 4
+            System.err.println("Erro ao processar token JWT: " + e.getMessage());
+            e.printStackTrace();
         }
 
         filterChain.doFilter(request, response);

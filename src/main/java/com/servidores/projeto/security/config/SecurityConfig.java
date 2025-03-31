@@ -58,11 +58,11 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(
                                 "/api/v1/auth/register",
-                                "/api/v1/auth/register-role")
-                        .hasRole("ADMIN")
+                                "/api/v1/auth/register-role",
+                                "/cidade/**")
+                        .hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 

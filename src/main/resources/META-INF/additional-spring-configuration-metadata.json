@@ -75,5 +75,10 @@
     "name": "minio.bucket.name",
     "type": "java.lang.String",
     "description": "A description for 'minio.bucket.name'"
+  },
+  {
+    "name": "minio.accessKey",
+    "type": "java.lang.String",
+    "description": "A description for 'minio.accessKey'"
   }
 ]}
