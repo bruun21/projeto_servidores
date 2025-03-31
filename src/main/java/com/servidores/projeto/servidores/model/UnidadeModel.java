@@ -13,9 +13,15 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "unidade")
+@Getter
+@Setter
+@Builder
 public class UnidadeModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,10 +36,11 @@ public class UnidadeModel {
 
     @ManyToMany
     @JoinTable(name = "unidade_endereco", joinColumns = @JoinColumn(name = "unid_id"), inverseJoinColumns = @JoinColumn(name = "end_id"))
+    @Builder.Default
     private List<EnderecoModel> enderecos = new ArrayList<>();
 
     @OneToMany(mappedBy = "unidade")
+    @Builder.Default
     private List<LotacaoModel> lotacoes = new ArrayList<>();
 
-    // Getters e Setters
 }
