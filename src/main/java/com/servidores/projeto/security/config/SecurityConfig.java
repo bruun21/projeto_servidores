@@ -59,7 +59,13 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v1/auth/register",
                                 "/api/v1/auth/register-role",
-                                "/cidade/**")
+                                "/cidade/**",
+                                "/endereco/**",
+                                "/unidade/**",
+                                "/lotacao/**",
+                                "/pessoa/**",
+                                "/servidor-efetivo/**",
+                                "/servidor-temporario/**")
                         .hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

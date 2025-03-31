@@ -81,13 +81,13 @@ public class PessoaService {
     }
 
     private PessoaModel buildPessoaFromRequest(PessoaRequestDTO requestDTO) {
-        return PessoaModel.builder()
-                .nome(requestDTO.getNome().trim())
-                .dataNascimento(requestDTO.getDataNascimento())
-                .sexo(requestDTO.getSexo())
-                .mae(requestDTO.getMae())
-                .pai(requestDTO.getPai())
-                .build();
+        return new PessoaModel(
+            requestDTO.getNome(),
+            requestDTO.getDataNascimento(),
+            requestDTO.getSexo(),
+            requestDTO.getMae(),
+            requestDTO.getPai()
+        );
     }
 
     private void associateEnderecos(PessoaModel pessoa, List<Long> enderecoIds) {

@@ -16,15 +16,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "endereco")
 @Getter
 @Setter
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class EnderecoModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,11 +50,9 @@ public class EnderecoModel {
     private CidadeModel cidade;
 
     @ManyToMany(mappedBy = "enderecos")
-    @Builder.Default
     private List<PessoaModel> pessoas = new ArrayList<>();
 
     @ManyToMany(mappedBy = "enderecos")
-    @Builder.Default
     private List<UnidadeModel> unidades = new ArrayList<>();
 
 }
