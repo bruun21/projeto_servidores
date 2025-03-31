@@ -1,4 +1,4 @@
-package com.servidores.projeto.servidores.unidade.controller;
+package com.servidores.projeto.servidores.cidade.controller;
 
 import java.net.URI;
 
@@ -15,22 +15,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.servidores.projeto.servidores.unidade.dto.UnidadeRequestDTO;
-import com.servidores.projeto.servidores.unidade.dto.UnidadeResponseDTO;
-import com.servidores.projeto.servidores.unidade.service.UnidadeService;
+import com.servidores.projeto.servidores.cidade.dto.CidadeRequestDTO;
+import com.servidores.projeto.servidores.cidade.dto.CidadeResponseDTO;
+import com.servidores.projeto.servidores.cidade.service.CidadeService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/unidades")
+@RequestMapping("/cidades")
 @RequiredArgsConstructor
-public class UnidadeController {
+public class CidadeController {
 
-    private final UnidadeService unidadeService;
+    private final CidadeService cidadeService;
 
     @PostMapping
-    public ResponseEntity<Long> createUnidade(@RequestBody UnidadeRequestDTO requestDTO) {
-        Long id = unidadeService.create(requestDTO);
+    public ResponseEntity<Long> criarCidade(@RequestBody CidadeRequestDTO requestDTO) {
+        Long id = cidadeService.createCidade(requestDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(id)
@@ -39,28 +39,28 @@ public class UnidadeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UnidadeResponseDTO> getUnidadeById(@PathVariable Long id) {
-        UnidadeResponseDTO responseDTO = unidadeService.getById(id);
+    public ResponseEntity<CidadeResponseDTO> buscarPorId(@PathVariable Long id) {
+        CidadeResponseDTO responseDTO = cidadeService.getById(id);
         return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping
-    public ResponseEntity<Page<UnidadeResponseDTO>> getAllUnidades(Pageable pageable) {
-        Page<UnidadeResponseDTO> unidades = unidadeService.getAll(pageable);
-        return ResponseEntity.ok(unidades);
+    public ResponseEntity<Page<CidadeResponseDTO>> listarTodas(Pageable pageable) {
+        Page<CidadeResponseDTO> cidades = cidadeService.getAll(pageable);
+        return ResponseEntity.ok(cidades);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UnidadeResponseDTO> updateUnidade(
+    public ResponseEntity<CidadeResponseDTO> atualizarCidade(
             @PathVariable Long id,
-            @RequestBody UnidadeRequestDTO requestDTO) {
-        UnidadeResponseDTO updatedUnidade = unidadeService.update(id, requestDTO);
-        return ResponseEntity.ok(updatedUnidade);
+            @RequestBody CidadeRequestDTO requestDTO) {
+        CidadeResponseDTO cidadeAtualizada = cidadeService.update(id, requestDTO);
+        return ResponseEntity.ok(cidadeAtualizada);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUnidade(@PathVariable Long id) {
-        unidadeService.delete(id);
+    public ResponseEntity<Void> excluirCidade(@PathVariable Long id) {
+        cidadeService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

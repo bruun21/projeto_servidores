@@ -1,4 +1,4 @@
-package com.servidores.projeto.servidores.unidade.controller;
+package com.servidores.projeto.servidores.endereco.controller;
 
 import java.net.URI;
 
@@ -15,22 +15,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.servidores.projeto.servidores.unidade.dto.UnidadeRequestDTO;
-import com.servidores.projeto.servidores.unidade.dto.UnidadeResponseDTO;
-import com.servidores.projeto.servidores.unidade.service.UnidadeService;
+import com.servidores.projeto.servidores.endereco.dto.EnderecoRequestDTO;
+import com.servidores.projeto.servidores.endereco.dto.EnderecoResponseDTO;
+import com.servidores.projeto.servidores.endereco.service.EnderecoService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/unidades")
+@RequestMapping("/enderecos")
 @RequiredArgsConstructor
-public class UnidadeController {
+public class EnderecoController {
 
-    private final UnidadeService unidadeService;
+    private final EnderecoService enderecoService;
 
     @PostMapping
-    public ResponseEntity<Long> createUnidade(@RequestBody UnidadeRequestDTO requestDTO) {
-        Long id = unidadeService.create(requestDTO);
+    public ResponseEntity<Long> criarEndereco(@RequestBody EnderecoRequestDTO requestDTO) {
+        Long id = enderecoService.create(requestDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(id)
@@ -39,28 +39,28 @@ public class UnidadeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UnidadeResponseDTO> getUnidadeById(@PathVariable Long id) {
-        UnidadeResponseDTO responseDTO = unidadeService.getById(id);
+    public ResponseEntity<EnderecoResponseDTO> buscarPorId(@PathVariable Long id) {
+        EnderecoResponseDTO responseDTO = enderecoService.getById(id);
         return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping
-    public ResponseEntity<Page<UnidadeResponseDTO>> getAllUnidades(Pageable pageable) {
-        Page<UnidadeResponseDTO> unidades = unidadeService.getAll(pageable);
-        return ResponseEntity.ok(unidades);
+    public ResponseEntity<Page<EnderecoResponseDTO>> listarTodos(Pageable pageable) {
+        Page<EnderecoResponseDTO> enderecos = enderecoService.getAll(pageable);
+        return ResponseEntity.ok(enderecos);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UnidadeResponseDTO> updateUnidade(
+    public ResponseEntity<EnderecoResponseDTO> atualizarEndereco(
             @PathVariable Long id,
-            @RequestBody UnidadeRequestDTO requestDTO) {
-        UnidadeResponseDTO updatedUnidade = unidadeService.update(id, requestDTO);
-        return ResponseEntity.ok(updatedUnidade);
+            @RequestBody EnderecoRequestDTO requestDTO) {
+        EnderecoResponseDTO enderecoAtualizado = enderecoService.update(id, requestDTO);
+        return ResponseEntity.ok(enderecoAtualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUnidade(@PathVariable Long id) {
-        unidadeService.delete(id);
+    public ResponseEntity<Void> excluirEndereco(@PathVariable Long id) {
+        enderecoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
