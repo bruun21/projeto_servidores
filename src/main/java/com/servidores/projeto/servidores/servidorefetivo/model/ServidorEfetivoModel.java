@@ -32,4 +32,10 @@ public class ServidorEfetivoModel {
 
     @Column(name = "se_matricula", length = 20)
     private String matricula;
+
+    public ServidorEfetivoModel(PessoaModel pessoa, String matricula) {
+        this.pessoa = pessoa;
+        this.matricula = matricula;
+    }
+
 }

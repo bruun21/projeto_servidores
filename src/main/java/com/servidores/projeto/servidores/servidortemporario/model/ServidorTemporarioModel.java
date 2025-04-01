@@ -38,4 +38,10 @@ public class ServidorTemporarioModel {
     @Column(name = "st_data_demissao")
     private LocalDate dataDemissao;
 
+    public ServidorTemporarioModel(PessoaModel pessoa, LocalDate dataAdmissao, LocalDate dataDemissao) {
+        this.pessoa = pessoa;
+        this.dataAdmissao = dataAdmissao;
+        this.dataDemissao = dataDemissao;
+    }
+
 }

@@ -27,12 +27,8 @@ public class EnderecoService {
 
     @Transactional
     public Long create(EnderecoRequestDTO requestDTO) {
-        CidadeModel cidade = cidadeRepository.findById(requestDTO.getCidadeId())
-                .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.CIDADE_NAO_ENCONTRADA, requestDTO.getCidadeId()));
 
-        EnderecoModel endereco = modelMapper.map(requestDTO, EnderecoModel.class);
-        endereco.setCidade(cidade);
-
+        EnderecoModel endereco = enderecoDTOToModel(requestDTO);
         return enderecoRepository.save(endereco).getId();
     }
 
@@ -62,5 +58,19 @@ public class EnderecoService {
             throw new ModelNaoEncontradaException(ErrorType.ENDERECO_NAO_ENCONTRADO, id);
         }
         enderecoRepository.deleteById(id);
+    }
+
+    private EnderecoModel enderecoDTOToModel(EnderecoRequestDTO requestDTO) {
+        CidadeModel cidade = cidadeRepository.findById(requestDTO.getCidadeId())
+                .orElseThrow(() -> new ModelNaoEncontradaException(
+                        ErrorType.CIDADE_NAO_ENCONTRADA,
+                        requestDTO.getCidadeId()));
+        EnderecoModel endereco = new EnderecoModel();
+        endereco.setTipoLogradouro(requestDTO.getTipoLogradouro());
+        endereco.setLogradouro(requestDTO.getLogradouro());
+        endereco.setNumero(requestDTO.getNumero());
+        endereco.setBairro(requestDTO.getBairro());
+        endereco.setCidade(cidade);
+        return endereco;
     }
 }

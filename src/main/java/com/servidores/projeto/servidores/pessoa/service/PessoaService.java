@@ -154,7 +154,7 @@ public class PessoaService {
                 .pessoa(pessoa)
                 .data(LocalDate.now())
                 .bucket(minioService.getBucketName())
-                .hash(minioKey)
+                .hash(minioKey.substring(0, minioKey.lastIndexOf('.')))
                 .build();
     }
 

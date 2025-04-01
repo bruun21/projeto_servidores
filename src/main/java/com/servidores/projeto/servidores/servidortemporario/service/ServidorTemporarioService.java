@@ -29,8 +29,8 @@ public class ServidorTemporarioService {
     public Long create(ServidorTemporarioRequestDTO requestDTO) {
         PessoaModel pessoa = buscarPessoaValidada(requestDTO.getPessoaId());
 
-        ServidorTemporarioModel servidorTemporario = modelMapper.map(requestDTO, ServidorTemporarioModel.class);
-        servidorTemporario.setPessoa(pessoa);
+        ServidorTemporarioModel servidorTemporario = new ServidorTemporarioModel(pessoa, requestDTO.getDataAdmissao(),
+                requestDTO.getDataDemissao());
 
         return servidorTemporarioRepository.save(servidorTemporario).getPessoa().getId();
     }

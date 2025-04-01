@@ -29,15 +29,7 @@ public class UnidadeService {
 
     @Transactional
     public Long create(UnidadeRequestDTO requestDTO) {
-        UnidadeModel unidade = modelMapper.map(requestDTO, UnidadeModel.class);
-
-        List<EnderecoModel> enderecos = requestDTO.getIdEnderecos().stream()
-                .map(idEndereco -> enderecoRepository.findById(idEndereco)
-                        .orElseThrow(() -> new ModelNaoEncontradaException(
-                                ErrorType.ENDERECO_NAO_ENCONTRADO, idEndereco)))
-                .toList();
-
-        unidade.setEnderecos(enderecos);
+        UnidadeModel unidade = fromDTO(requestDTO, enderecoRepository);
         unidade = unidadeRepository.save(unidade);
 
         return unidade.getId();
@@ -69,5 +61,21 @@ public class UnidadeService {
             throw new ModelNaoEncontradaException(ErrorType.UNIDADE_NAO_ENCONTRADA, id);
         }
         unidadeRepository.deleteById(id);
+    }
+
+    public static UnidadeModel fromDTO(UnidadeRequestDTO unidadeRequestDTO) {
+        UnidadeModel unidade = new UnidadeModel();
+        unidade.setNome(unidadeRequestDTO.getNome());
+        unidade.setSigla(unidadeRequestDTO.getSigla());
+        return unidade;
+    }
+
+    public static UnidadeModel fromDTO(UnidadeRequestDTO unidadeRequestDTO, EnderecoRepository enderecoRepository) {
+        UnidadeModel unidade = fromDTO(unidadeRequestDTO);
+        
+        List<EnderecoModel> enderecos = enderecoRepository.findAllById(unidadeRequestDTO.getIdEnderecos());
+        unidade.getEnderecos().addAll(enderecos);
+        
+        return unidade;
     }
 }

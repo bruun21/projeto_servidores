@@ -29,10 +29,7 @@ public class ServidorEfetivoService {
     public Long create(ServidorEfetivoRequestDTO requestDTO) {
         PessoaModel pessoa = buscarPessoaValidada(requestDTO.getPessoaId());
 
-        ServidorEfetivoModel servidorEfetivo = modelMapper.map(requestDTO, ServidorEfetivoModel.class);
-        servidorEfetivo.setPessoa(pessoa);
-
-        servidorEfetivo.setId(pessoa.getId());
+        ServidorEfetivoModel servidorEfetivo = new ServidorEfetivoModel(pessoa, requestDTO.getMatricula());
 
         return servidorEfetivoRepository.save(servidorEfetivo).getId();
     }
