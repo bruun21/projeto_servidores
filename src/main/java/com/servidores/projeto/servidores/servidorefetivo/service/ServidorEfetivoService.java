@@ -2,11 +2,14 @@ package com.servidores.projeto.servidores.servidorefetivo.service;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +17,19 @@ import org.springframework.transaction.annotation.Transactional;
 import com.servidores.projeto.commons.MinioService;
 import com.servidores.projeto.commons.enums.ErrorType;
 import com.servidores.projeto.commons.exceptions.ModelNaoEncontradaException;
+import com.servidores.projeto.servidores.endereco.model.EnderecoModel;
 import com.servidores.projeto.servidores.lotacao.model.LotacaoModel;
 import com.servidores.projeto.servidores.pessoa.model.FotoPessoaModel;
 import com.servidores.projeto.servidores.pessoa.model.PessoaModel;
 import com.servidores.projeto.servidores.pessoa.repository.PessoaRepository;
+import com.servidores.projeto.servidores.servidorefetivo.dto.EnderecoDTO;
+import com.servidores.projeto.servidores.servidorefetivo.dto.EnderecoFuncionalDTO;
 import com.servidores.projeto.servidores.servidorefetivo.dto.ServidorEfetivoLotacaoResponseDTO;
 import com.servidores.projeto.servidores.servidorefetivo.dto.ServidorEfetivoRequestDTO;
 import com.servidores.projeto.servidores.servidorefetivo.dto.ServidorEfetivoResponseDTO;
 import com.servidores.projeto.servidores.servidorefetivo.model.ServidorEfetivoModel;
 import com.servidores.projeto.servidores.servidorefetivo.repository.ServidorEfetivoRepository;
+import com.servidores.projeto.servidores.unidade.model.UnidadeModel;
 import com.servidores.projeto.servidores.unidade.repository.UnidadeRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -130,4 +137,58 @@ public class ServidorEfetivoService {
         return String.format("%s/%s/%s", minioEndpoint, minioService.getBucketName(), objectName);
     }
 
+    public Page<EnderecoFuncionalDTO> findEnderecoFuncionalByNomeParcial(String parteNome, Pageable pageable) {
+        Page<ServidorEfetivoModel> servidoresPage = servidorEfetivoRepository.findByNomeContainingIgnoreCase(parteNome,
+                pageable);
+
+        List<EnderecoFuncionalDTO> dtos = servidoresPage.stream()
+                .map(this::convertToDTO)
+                .filter(dto -> !dto.getEnderecosFuncionais().isEmpty())
+                .toList();
+
+        return new PageImpl<>(
+                dtos,
+                servidoresPage.getPageable(),
+                servidoresPage.getTotalElements());
+    }
+
+    private EnderecoFuncionalDTO convertToDTO(ServidorEfetivoModel servidor) {
+        PessoaModel pessoa = servidor.getPessoa();
+
+        LotacaoModel lotacaoAtual = pessoa.getLotacoes().stream()
+                .filter(lotacao -> lotacao.getDataRemocao() == null)
+                .findFirst()
+                .orElse(null);
+
+        if (lotacaoAtual == null) {
+            return new EnderecoFuncionalDTO(
+                    pessoa.getNome(),
+                    servidor.getMatricula(),
+                    "",
+                    "",
+                    new ArrayList<>());
+        }
+
+        UnidadeModel unidade = lotacaoAtual.getUnidade();
+
+        List<EnderecoDTO> enderecosDTO = unidade.getEnderecos().stream()
+                .map(this::convertEnderecoToDTO)
+                .collect(Collectors.toList());
+
+        return new EnderecoFuncionalDTO(
+                pessoa.getNome(),
+                servidor.getMatricula(),
+                unidade.getNome(),
+                unidade.getSigla(),
+                enderecosDTO);
+    }
+
+    private EnderecoDTO convertEnderecoToDTO(EnderecoModel endereco) {
+        return new EnderecoDTO(
+                endereco.getLogradouro(),
+                endereco.getNumero().toString(),
+                endereco.getBairro(),
+                endereco.getCidade().getNome(),
+                endereco.getCidade().getUf());
+    }
 }

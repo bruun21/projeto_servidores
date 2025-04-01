@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.servidores.projeto.servidores.servidorefetivo.dto.EnderecoFuncionalDTO;
 import com.servidores.projeto.servidores.servidorefetivo.dto.ServidorEfetivoLotacaoResponseDTO;
 import com.servidores.projeto.servidores.servidorefetivo.dto.ServidorEfetivoRequestDTO;
 import com.servidores.projeto.servidores.servidorefetivo.dto.ServidorEfetivoResponseDTO;
@@ -72,5 +74,22 @@ public class ServidorEfetivoController {
 
         List<ServidorEfetivoLotacaoResponseDTO> response = servidorEfetivoService.findServidoresPorUnidade(unidId);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/endereco-funcional")
+    public ResponseEntity<Page<EnderecoFuncionalDTO>> findByNomeParcial(
+            @RequestParam("nome") String parteNome, Pageable pageable) {
+        
+        if (parteNome == null || parteNome.trim().isEmpty() || parteNome.length() < 3) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        
+        Page<EnderecoFuncionalDTO> enderecos = servidorEfetivoService.findEnderecoFuncionalByNomeParcial(parteNome, pageable);
+        
+        if (enderecos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        
+        return ResponseEntity.ok(enderecos);
     }
 }
