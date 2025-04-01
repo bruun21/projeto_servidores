@@ -132,7 +132,7 @@ public class ServidorEfetivoService {
 
         String objectName = fotos.get(0).getHash();
 
-        return String.format("%s/%s/%s", minioEndpoint, minioService.getBucketName(), objectName);
+        return minioService.generatePresignedUrl(objectName, 300);
     }
 
     public Page<EnderecoFuncionalDTO> findEnderecoFuncionalByNomeParcial(String parteNome, Pageable pageable) {

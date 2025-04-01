@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.minio.BucketExistsArgs;
+import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.http.Method;
 import lombok.Getter;
 
 @Service
@@ -31,7 +33,7 @@ public class MinioService {
             boolean exists = minioClient.bucketExists(BucketExistsArgs.builder()
                     .bucket(bucketName)
                     .build());
-            
+
             if (!exists) {
                 minioClient.makeBucket(MakeBucketArgs.builder()
                         .bucket(bucketName)
@@ -59,6 +61,20 @@ public class MinioService {
             return fileName;
         } catch (Exception e) {
             throw new RuntimeException("Erro ao fazer upload do arquivo para o MinIO", e);
+        }
+    }
+
+    public String generatePresignedUrl(String objectName, int expirySeconds) {
+        try {
+            return minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .method(Method.GET)
+                            .bucket(bucketName)
+                            .object(objectName)
+                            .expiry(expirySeconds)
+                            .build());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao gerar URL pré-assinada", e);
         }
     }
 
