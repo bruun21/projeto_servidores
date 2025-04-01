@@ -5,9 +5,13 @@ import java.util.List;
 import com.servidores.projeto.servidores.endereco.dto.EnderecoResponseDTO;
 import com.servidores.projeto.servidores.lotacao.dto.LotacaoResponseDTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PessoaResponseDTO {
     private Long id;
 
