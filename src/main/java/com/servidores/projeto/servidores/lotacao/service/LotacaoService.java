@@ -30,14 +30,7 @@ public class LotacaoService {
 
     @Transactional
     public Long create(LotacaoRequestDTO requestDTO) {
-        PessoaModel pessoa = buscarPessoaOuLancarExcecao(requestDTO.getPessoaId());
-        UnidadeModel unidade = buscarUnidadeOuLancarExcecao(requestDTO.getUnidadeId());
-
-        LotacaoModel lotacao = modelMapper.map(requestDTO, LotacaoModel.class);
-        lotacao.setPessoa(pessoa);
-        lotacao.setUnidade(unidade);
-
-        return lotacaoRepository.save(lotacao).getId();
+        return lotacaoRepository.save(toModel(requestDTO)).getId();
     }
 
     public LotacaoResponseDTO getById(Long id) {
@@ -84,5 +77,19 @@ public class LotacaoService {
     private UnidadeModel buscarUnidadeOuLancarExcecao(Long unidadeId) {
         return unidadeRepository.findById(unidadeId)
                 .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.UNIDADE_NAO_ENCONTRADA, unidadeId));
+    }
+
+    public LotacaoModel toModel(LotacaoRequestDTO dto) {
+        LotacaoModel model = new LotacaoModel();
+        PessoaModel pessoa = buscarPessoaOuLancarExcecao(dto.getPessoaId());
+        UnidadeModel unidade = buscarUnidadeOuLancarExcecao(dto.getUnidadeId());
+
+        model.setPessoa(pessoa);
+        model.setUnidade(unidade);
+        model.setDataLotacao(dto.getDataLotacao());
+        model.setDataRemocao(dto.getDataRemocao());
+        model.setPortaria(dto.getPortaria());
+
+        return model;
     }
 }
