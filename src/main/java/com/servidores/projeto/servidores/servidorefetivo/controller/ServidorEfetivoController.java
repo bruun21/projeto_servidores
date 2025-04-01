@@ -1,6 +1,7 @@
 package com.servidores.projeto.servidores.servidorefetivo.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.servidores.projeto.servidores.servidorefetivo.dto.ServidorEfetivoLotacaoResponseDTO;
 import com.servidores.projeto.servidores.servidorefetivo.dto.ServidorEfetivoRequestDTO;
 import com.servidores.projeto.servidores.servidorefetivo.dto.ServidorEfetivoResponseDTO;
 import com.servidores.projeto.servidores.servidorefetivo.service.ServidorEfetivoService;
@@ -62,5 +64,13 @@ public class ServidorEfetivoController {
     public ResponseEntity<Void> excluirServidor(@PathVariable Long id) {
         servidorEfetivoService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/por-unidade/{unidId}")
+    public ResponseEntity<List<ServidorEfetivoLotacaoResponseDTO>> getPorUnidade(
+            @PathVariable Long unidId) {
+
+        List<ServidorEfetivoLotacaoResponseDTO> response = servidorEfetivoService.findServidoresPorUnidade(unidId);
+        return ResponseEntity.ok(response);
     }
 }

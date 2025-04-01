@@ -63,14 +63,14 @@ public class UnidadeService {
         unidadeRepository.deleteById(id);
     }
 
-    public static UnidadeModel fromDTO(UnidadeRequestDTO unidadeRequestDTO) {
+    public UnidadeModel fromDTO(UnidadeRequestDTO unidadeRequestDTO) {
         UnidadeModel unidade = new UnidadeModel();
         unidade.setNome(unidadeRequestDTO.getNome());
         unidade.setSigla(unidadeRequestDTO.getSigla());
         return unidade;
     }
 
-    public static UnidadeModel fromDTO(UnidadeRequestDTO unidadeRequestDTO, EnderecoRepository enderecoRepository) {
+    public UnidadeModel fromDTO(UnidadeRequestDTO unidadeRequestDTO, EnderecoRepository enderecoRepository) {
         UnidadeModel unidade = fromDTO(unidadeRequestDTO);
         
         List<EnderecoModel> enderecos = enderecoRepository.findAllById(unidadeRequestDTO.getIdEnderecos());
