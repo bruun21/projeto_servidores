@@ -1,7 +1,5 @@
 package com.servidores.projeto.servidores.servidorefetivo.repository;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,7 +16,7 @@ public interface ServidorEfetivoRepository extends JpaRepository<ServidorEfetivo
             "JOIN p.lotacoes l " +
             "WHERE l.unidade.id = :unidId " +
             "AND l.dataRemocao IS NULL")
-    List<ServidorEfetivoModel> findByUnidadeLotacao(@Param("unidId") Long unidId);
+    Page<ServidorEfetivoModel> findByUnidadeLotacao(@Param("unidId") Long unidId, Pageable pageable);
 
     @Query("SELECT se FROM ServidorEfetivoModel se " +
            "JOIN se.pessoa p " +

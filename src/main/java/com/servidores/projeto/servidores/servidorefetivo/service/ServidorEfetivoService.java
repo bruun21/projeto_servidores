@@ -95,14 +95,12 @@ public class ServidorEfetivoService {
                 .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.PESSOA_NAO_ENCONTRADA, pessoaId));
     }
 
-    public List<ServidorEfetivoLotacaoResponseDTO> findServidoresPorUnidade(Long unidId) {
+    public Page<ServidorEfetivoLotacaoResponseDTO> findServidoresPorUnidade(Long unidId, Pageable pageable) {
         unidadeRepository.findById(unidId)
                 .orElseThrow(() -> new EntityNotFoundException("Unidade não encontrada"));
 
-        return servidorEfetivoRepository.findByUnidadeLotacao(unidId)
-                .stream()
-                .map(this::toResponse)
-                .toList();
+        Page<ServidorEfetivoModel> pageEntidade = servidorEfetivoRepository.findByUnidadeLotacao(unidId, pageable);
+        return pageEntidade.map(this::toResponse);
     }
 
     private ServidorEfetivoLotacaoResponseDTO toResponse(ServidorEfetivoModel servidor) {

@@ -1,7 +1,6 @@
 package com.servidores.projeto.servidores.servidorefetivo.controller;
 
 import java.net.URI;
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -69,10 +68,10 @@ public class ServidorEfetivoController {
     }
 
     @GetMapping("/por-unidade/{unidId}")
-    public ResponseEntity<List<ServidorEfetivoLotacaoResponseDTO>> getPorUnidade(
-            @PathVariable Long unidId) {
+    public ResponseEntity<Page<ServidorEfetivoLotacaoResponseDTO>> getPorUnidade(
+            @PathVariable Long unidId, Pageable pageable) {
 
-        List<ServidorEfetivoLotacaoResponseDTO> response = servidorEfetivoService.findServidoresPorUnidade(unidId);
+        Page<ServidorEfetivoLotacaoResponseDTO> response = servidorEfetivoService.findServidoresPorUnidade(unidId, pageable);
         return ResponseEntity.ok(response);
     }
 
