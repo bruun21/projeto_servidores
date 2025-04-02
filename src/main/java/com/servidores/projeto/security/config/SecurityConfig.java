@@ -54,11 +54,7 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**",
-                                "/configuration/**")
-                        .permitAll()
-                        .requestMatchers(
-                                "/api/v1/auth/register",
-                                "/api/v1/auth/register-role",
+                                "/configuration/**",
                                 "/cidade/**",
                                 "/endereco/**",
                                 "/unidade/**",
@@ -66,6 +62,18 @@ public class SecurityConfig {
                                 "/pessoa/**",
                                 "/servidor-efetivo/**",
                                 "/servidor-temporario/**")
+                        .permitAll()
+                        .requestMatchers(
+                                "/api/v1/auth/register",
+                                "/api/v1/auth/register-role"
+                                // "/cidade/**",
+                                // "/endereco/**",
+                                // "/unidade/**",
+                                // "/lotacao/**",
+                                // "/pessoa/**",
+                                // "/servidor-efetivo/**",
+                                //"/servidor-temporario/**"
+                                )
                         .hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
