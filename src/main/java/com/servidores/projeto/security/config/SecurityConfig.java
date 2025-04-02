@@ -54,7 +54,9 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**",
-                                "/configuration/**",
+                                "/configuration/**")
+                        .permitAll()
+                        .requestMatchers(
                                 "/cidade/**",
                                 "/endereco/**",
                                 "/unidade/**",
@@ -62,20 +64,7 @@ public class SecurityConfig {
                                 "/pessoa/**",
                                 "/servidor-efetivo/**",
                                 "/servidor-temporario/**")
-                        .permitAll()
-                        .requestMatchers(
-                                "/api/v1/auth/register",
-                                "/api/v1/auth/register-role"
-                                // "/cidade/**",
-                                // "/endereco/**",
-                                // "/unidade/**",
-                                // "/lotacao/**",
-                                // "/pessoa/**",
-                                // "/servidor-efetivo/**",
-                                //"/servidor-temporario/**"
-                                )
-                        .hasAuthority("ROLE_ADMIN")
-                        .anyRequest().authenticated())
+                        .authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -83,11 +72,10 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
         configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
-
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
+        configuration.setMaxAge(3600L);
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -2,6 +2,8 @@ package com.servidores.projeto.security;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +25,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
 
     public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
         this.jwtService = jwtService;
@@ -55,14 +59,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
-                    System.out.println("Autenticação bem-sucedida para usuário: " + userEmail);
+                    log.debug("Autenticação bem-sucedida para usuário: {}", userEmail);
                     System.out.println("Autoridades: " + userDetails.getAuthorities());
                 } else {
                     System.out.println("Token inválido para usuário: " + userEmail);
                 }
             }
         } catch (Exception e) {
-            System.err.println("Erro ao processar token JWT: " + e.getMessage());
+            log.error("Erro ao processar token JWT: {}", e.getMessage());
             e.printStackTrace();
         }
 

@@ -1,5 +1,8 @@
 package com.servidores.projeto.security.service;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -107,15 +110,20 @@ public class AuthService {
 
     @Transactional
     public AuthResponse register(UserRequest request) throws AuthException {
-        if (userRepository.existsByEmail(request.email())) {
+        String normalizedEmail = request.email().toLowerCase().trim();
+        if (userRepository.existsByEmail(normalizedEmail)) {
             throw new AuthException("Email já registrado");
         }
-        Role role = roleRepository.findById(request.roleId())
-                .orElseThrow(() -> new NotFoundException("Role não encontrada"));
+
+        Set<Role> roles = request.roleIds().stream()
+                .map(id -> roleRepository.findById(id)
+                        .orElseThrow(() -> new NotFoundException("Role id " + id + " não encontrada")))
+                .collect(Collectors.toSet());
+
         User newUser = User.builder()
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
-                .role(role)
+                .roles(roles)
                 .enabled(true)
                 .build();
 

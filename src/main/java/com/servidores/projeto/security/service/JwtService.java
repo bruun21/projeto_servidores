@@ -1,6 +1,7 @@
 package com.servidores.projeto.security.service;
 
 import java.util.Date;
+import java.util.UUID;
 import java.util.function.Function;
 
 import javax.crypto.SecretKey;
@@ -28,16 +29,14 @@ public class JwtService {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtConfig.getSecret()));
         this.jwtParser = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
-                .setAllowedClockSkewSeconds(30) // Tolerância de 30 segundos para diferença de horário
+                .setAllowedClockSkewSeconds(30)
                 .build();
     }
 
-    // Gera token de acesso (tempo de vida maior)
     public String generateAccessToken(UserDetails userDetails) {
         return buildToken(userDetails, jwtConfig.getAccessExpirationMs(), "ACCESS");
     }
 
-    // Gera refresh token (tempo de vida maior que o access token)
     public String generateRefreshToken(UserDetails userDetails) {
         return buildToken(userDetails, jwtConfig.getRefreshTokenExpirationMs(), "REFRESH");
     }
@@ -48,6 +47,9 @@ public class JwtService {
                 .claim("token_type", tokenType)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
+                .setIssuer("servidores-api")
+                .setAudience("servidores-client")
+                .setId(UUID.randomUUID().toString())
                 .signWith(secretKey)
                 .compact();
     }
@@ -58,9 +60,9 @@ public class JwtService {
             return "REFRESH".equals(claims.get("token_type", String.class)) &&
                     !isTokenExpired(token);
         } catch (ExpiredJwtException ex) {
-            return false; // Refresh token expirado
+            return false; 
         } catch (Exception e) {
-            return false; // Token inválido
+            return false;
         }
     }
 

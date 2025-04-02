@@ -1,5 +1,7 @@
 package com.servidores.projeto.security.mapper;
 
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import com.servidores.projeto.security.dto.RoleDto;
@@ -14,7 +16,7 @@ public class UserMapper {
         return new UserResponse(
                 user.getId(),
                 user.getEmail(),
-                toRoleDto(user.getRole()),
+                user.getRoles().stream().map(this::toRoleDto).collect(Collectors.toSet()),
                 user.getCreatedAt(),
                 user.getUpdatedAt());
     }

@@ -1,4 +1,6 @@
 package com.servidores.projeto.security;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -10,6 +12,7 @@ import com.servidores.projeto.security.model.User;
 import com.servidores.projeto.security.repository.RoleRepository;
 import com.servidores.projeto.security.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -33,6 +36,7 @@ public class AdminInitializer implements CommandLineRunner {
     private String adminRoleDescription;
 
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
         if (shouldCreateAdmin()) {
             Role role = createAdminRole();
@@ -53,10 +57,12 @@ public class AdminInitializer implements CommandLineRunner {
     }
 
     private void createAdminUser(Role role) {
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
         User admin = new User();
         admin.setEmail(adminEmail);
         admin.setPassword(passwordEncoder.encode(adminPassword));
-        admin.setRole(role);
+        admin.setRoles(roles);
         userRepository.save(admin);
     }
 }
