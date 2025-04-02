@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -32,7 +33,6 @@ import com.servidores.projeto.servidores.servidorefetivo.repository.ServidorEfet
 import com.servidores.projeto.servidores.unidade.model.UnidadeModel;
 import com.servidores.projeto.servidores.unidade.repository.UnidadeRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -96,8 +96,9 @@ public class ServidorEfetivoService {
     }
 
     public Page<ServidorEfetivoLotacaoResponseDTO> findServidoresPorUnidade(Long unidId, Pageable pageable) {
-        unidadeRepository.findById(unidId)
-                .orElseThrow(() -> new EntityNotFoundException("Unidade não encontrada"));
+        if (!unidadeRepository.existsById(unidId)) {
+            throw new ModelNaoEncontradaException(ErrorType.UNIDADE_NAO_ENCONTRADA, unidId);
+        }
 
         Page<ServidorEfetivoModel> pageEntidade = servidorEfetivoRepository.findByUnidadeLotacao(unidId, pageable);
         return pageEntidade.map(this::toResponse);
@@ -122,17 +123,17 @@ public class ServidorEfetivoService {
     }
 
     private Integer calcularIdade(LocalDate dataNascimento) {
+        if (dataNascimento == null) {
+            throw new IllegalArgumentException("Data de nascimento não pode ser nula");
+        }
         return Period.between(dataNascimento, LocalDate.now()).getYears();
     }
 
     private String getFotoUrl(List<FotoPessoaModel> fotos) {
-        if (fotos == null || fotos.isEmpty()) {
-            return null;
-        }
-
-        String objectName = fotos.get(0).getHash();
-
-        return minioService.generatePresignedUrl(objectName, 300);
+        return Optional.ofNullable(fotos)
+                .filter(list -> !list.isEmpty())
+                .map(list -> minioService.generatePresignedUrl(list.get(0).getHash(), 300))
+                .orElse(null);
     }
 
     public Page<EnderecoFuncionalDTO> findEnderecoFuncionalByNomeParcial(String parteNome, Pageable pageable) {
@@ -153,10 +154,7 @@ public class ServidorEfetivoService {
     private EnderecoFuncionalDTO convertToDTO(ServidorEfetivoModel servidor) {
         PessoaModel pessoa = servidor.getPessoa();
 
-        LotacaoModel lotacaoAtual = pessoa.getLotacoes().stream()
-                .filter(lotacao -> lotacao.getDataRemocao() == null)
-                .findFirst()
-                .orElse(null);
+        LotacaoModel lotacaoAtual = getLotacaoAtiva(pessoa);
 
         if (lotacaoAtual == null) {
             return new EnderecoFuncionalDTO(
