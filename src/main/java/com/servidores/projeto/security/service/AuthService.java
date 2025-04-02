@@ -1,7 +1,7 @@
 package com.servidores.projeto.security.service;
 
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -110,23 +110,35 @@ public class AuthService {
 
     @Transactional
     public AuthResponse register(UserRequest request) throws AuthException {
+
+        if (request.roleIds() == null || request.roleIds().isEmpty()) {
+            throw new ApiRequestException(HttpStatus.BAD_REQUEST, "Pelo menos uma role deve ser especificada");
+        }
+
         String normalizedEmail = request.email().toLowerCase().trim();
         if (userRepository.existsByEmail(normalizedEmail)) {
             throw new AuthException("Email já registrado");
         }
 
-        Set<Role> roles = request.roleIds().stream()
-                .map(id -> roleRepository.findById(id)
-                        .orElseThrow(() -> new NotFoundException("Role id " + id + " não encontrada")))
-                .collect(Collectors.toSet());
+        Set<Role> roles = new HashSet<>(roleRepository.findAllById(request.roleIds()));
+
+        if (roles.size() != request.roleIds().size()) {
+            log.warn("Algumas roles solicitadas não foram encontradas. Solicitadas: {}, Encontradas: {}",
+                    request.roleIds().size(), roles.size());
+            throw new NotFoundException("Uma ou mais roles não foram encontradas");
+        }
 
         User newUser = User.builder()
-                .email(request.email())
+                .email(normalizedEmail)
                 .password(passwordEncoder.encode(request.password()))
                 .roles(roles)
                 .enabled(true)
+                .locked(false)
+                .accountExpiryDate(request.accountExpiryDate())
+                .credentialsExpiryDate(request.credentialsExpiryDate())
                 .build();
 
+        log.info("Registrando novo usuário: {} com {} roles", normalizedEmail, roles.size());
         userRepository.save(newUser);
 
         return authenticate(new AuthRequest(request.email(), request.password()));

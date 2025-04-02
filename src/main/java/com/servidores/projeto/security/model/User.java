@@ -66,6 +66,16 @@ public class User implements UserDetails {
     @Builder.Default
     private Boolean enabled = true;
 
+    @Column
+    @Builder.Default
+    private boolean locked = false;
+
+    @Column
+    private LocalDateTime accountExpiryDate;
+
+    @Column
+    private LocalDateTime credentialsExpiryDate;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (roles == null || roles.isEmpty()) {
@@ -81,21 +91,21 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return accountExpiryDate == null || accountExpiryDate.isAfter(LocalDateTime.now());
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return credentialsExpiryDate == null || credentialsExpiryDate.isAfter(LocalDateTime.now());
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }
