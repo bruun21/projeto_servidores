@@ -1,84 +1,81 @@
-{"properties": [
-  {
-    "name": "app.security.jwt.secret",
-    "type": "java.lang.String",
-    "description": "Secret key para assinatura dos tokens JWT. Deve ser uma string segura com mínimo de 256 bits."
-  },
-  {
-    "name": "app.security.jwt.expiration-ms",
-    "type": "java.lang.Long",
-    "description": "Tempo de expiração do token em milissegundos. Padrão: 300000 (5 minutos).",
-    "defaultValue": 300000
-  },
-  {
-    "name": "app.security.jwt.refresh-window-ms",
-    "type": "java.lang.Long",
-    "description": "Janela de tempo permitida para renovação do token antes da expiração em milissegundos. Padrão: 240000 (4 minutos).",
-    "defaultValue": 240000
-  },
-  {
-    "name": "app.security.jwt.refresh-expiration-ms",
-    "type": "java.lang.Long",
-    "description": "A description for 'app.security.jwt.refresh-expiration-ms'"
-  },
-  {
-    "name": "security.allowed.origins",
-    "type": "java.lang.String",
-    "description": "A description for 'security.allowed.origins'"
-  },
-  {
-    "name": "app.security.jwt.access-expiration-ms",
-    "type": "java.lang.String",
-    "description": "A description for 'app.security.jwt.access-expiration-ms'"
-  },
-  {
-    "name": "admin.email",
-    "type": "java.lang.String",
-    "description": "A description for 'admin.email'"
-  },
-  {
-    "name": "admin.password",
-    "type": "java.lang.String",
-    "description": "A description for 'admin.password'"
-  },
-  {
-    "name": "admin.role.name",
-    "type": "java.lang.String",
-    "description": "A description for 'admin.role.name'"
-  },
-  {
-    "name": "admin.role.description",
-    "type": "java.lang.String",
-    "description": "A description for 'admin.role.description'"
-  },
-  {
-    "name": "hibernate.transaction.jta.platform",
-    "type": "java.lang.String",
-    "description": "A description for 'hibernate.transaction.jta.platform'"
-  },
-  {
-    "name": "minio.endpoint",
-    "type": "java.lang.String",
-    "description": "A description for 'minio.endpoint'"
-  },
-  {
-    "name": "minio.accessKey",
-    "type": "java.lang.String",
-    "description": "A description for 'minio.accessKey'"
-  },
-  {
-    "name": "minio.secretKey",
-    "type": "java.lang.String",
-    "description": "A description for 'minio.secretKey'"
-  },
-  {
-    "name": "minio.bucket.name",
-    "type": "java.lang.String",
-    "description": "A description for 'minio.bucket.name'"
-  },
-  {
-    "name": "minio.accessKey",
-    "type": "java.lang.String",
-    "description": "A description for 'minio.accessKey'"
-  }
-]}
+{
+  "properties": [
+    {
+      "name": "app.security.jwt.secret",
+      "type": "java.lang.String",
+      "description": "Secret key para assinatura dos tokens JWT. Deve ser uma string segura com mínimo de 256 bits."
+    },
+    {
+      "name": "app.security.jwt.expiration-ms",
+      "type": "java.lang.Long",
+      "description": "Tempo de expiração do token em milissegundos. Padrão: 300000 (5 minutos).",
+      "defaultValue": 300000
+    },
+    {
+      "name": "app.security.jwt.refresh-window-ms",
+      "type": "java.lang.Long",
+      "description": "Janela de tempo permitida para renovação do token antes da expiração em milissegundos. Padrão: 240000 (4 minutos).",
+      "defaultValue": 240000
+    },
+    {
+      "name": "app.security.jwt.refresh-expiration-ms",
+      "type": "java.lang.Long",
+      "description": "Tempo de expiração do token de refresh em milissegundos. Define por quanto tempo o refresh token é válido (ex: 86400000 para 24 horas)."
+    },
+    {
+      "name": "security.allowed.origins",
+      "type": "java.lang.String",
+      "description": "Origins permitidos para CORS (Cross-Origin Resource Sharing). Separe múltiplos valores por vírgula (ex: 'http://localhost:3000, https://app.example.com')."
+    },
+    {
+      "name": "app.security.jwt.access-expiration-ms",
+      "type": "java.lang.Long",
+      "description": "Tempo de expiração do token de acesso em milissegundos."
+    },
+    {
+      "name": "admin.email",
+      "type": "java.lang.String",
+      "description": "E-mail do usuário administrador padrão criado durante a inicialização da aplicação."
+    },
+    {
+      "name": "admin.password",
+      "type": "java.lang.String",
+      "description": "Senha do usuário administrador padrão. Recomenda-se alterar em ambientes de produção."
+    },
+    {
+      "name": "admin.role.name",
+      "type": "java.lang.String",
+      "description": "Nome da role/perfil de administrador (ex: 'ROLE_ADMIN'). Usado para autorização em endpoints críticos."
+    },
+    {
+      "name": "admin.role.description",
+      "type": "java.lang.String",
+      "description": "Descrição da role de administrador (ex: 'Acesso total ao sistema')."
+    },
+    {
+      "name": "hibernate.transaction.jta.platform",
+      "type": "java.lang.String",
+      "description": "Classe responsável por integrar o Hibernate a um gerenciador de transações JTA (ex: Atomikos, Bitronix). Necessário para transações distribuídas."
+    },
+    {
+      "name": "minio.endpoint",
+      "type": "java.lang.String",
+      "description": "URL do servidor Minio para armazenamento de objetos (ex: 'http://localhost:9000')."
+    },
+    {
+      "name": "minio.accessKey",
+      "type": "java.lang.String",
+      "description": "Chave de acesso para autenticação no Minio (equivalente ao usuário)."
+    },
+    {
+      "name": "minio.secretKey",
+      "type": "java.lang.String",
+      "description": "Chave secreta para autenticação no Minio. Deve ser mantida em sigilo."
+    },
+    {
+      "name": "minio.bucket.name",
+      "type": "java.lang.String",
+      "description": "Nome do bucket padrão onde os arquivos serão armazenados no Minio (ex: 'documents')."
+    }
+  ]
+}

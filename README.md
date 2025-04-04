@@ -74,7 +74,7 @@ Este é um projeto demonstrativo desenvolvido com Spring Boot, projetado para ge
 ## Documentação da API
 - A documentação OpenAPI está disponível em: `http://localhost:8080/swagger-ui.html`
 
-## Usuário Administrador Padrão
+## Usuário Administrador Padrão (Definido nas variáveis de ambiente)
 - Email: admin@email.com
 - Senha: Admin123
 - Função: ADMIN
