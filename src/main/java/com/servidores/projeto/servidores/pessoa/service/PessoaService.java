@@ -82,12 +82,11 @@ public class PessoaService {
 
     private PessoaModel buildPessoaFromRequest(PessoaRequestDTO requestDTO) {
         return new PessoaModel(
-            requestDTO.getNome(),
-            requestDTO.getDataNascimento(),
-            requestDTO.getSexo(),
-            requestDTO.getMae(),
-            requestDTO.getPai()
-        );
+                requestDTO.getNome(),
+                requestDTO.getDataNascimento(),
+                requestDTO.getSexo(),
+                requestDTO.getMae(),
+                requestDTO.getPai());
     }
 
     private void associateEnderecos(PessoaModel pessoa, List<Long> enderecoIds) {
@@ -154,7 +153,7 @@ public class PessoaService {
                 .pessoa(pessoa)
                 .data(LocalDate.now())
                 .bucket(minioService.getBucketName())
-                .hash(minioKey.substring(0, minioKey.lastIndexOf('.')))
+                .hash(minioKey)
                 .build();
     }
 

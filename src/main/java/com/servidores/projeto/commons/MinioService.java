@@ -1,7 +1,8 @@
 package com.servidores.projeto.commons;
 
 import java.io.InputStream;
-import java.util.UUID;
+import java.security.MessageDigest;
+import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -46,8 +47,7 @@ public class MinioService {
 
     public String uploadFile(MultipartFile file) {
         try {
-            String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
-
+            String fileName = generateFileHash(file);
             InputStream inputStream = file.getInputStream();
 
             minioClient.putObject(
@@ -75,6 +75,18 @@ public class MinioService {
                             .build());
         } catch (Exception e) {
             throw new RuntimeException("Erro ao gerar URL pré-assinada", e);
+        }
+    }
+
+    private String generateFileHash(MultipartFile file) {
+        try (InputStream is = file.getInputStream()) {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(is.readAllBytes());
+
+            return Base64.getEncoder().encodeToString(hashBytes);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao gerar hash", e);
         }
     }
 
