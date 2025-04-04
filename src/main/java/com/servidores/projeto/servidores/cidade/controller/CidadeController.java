@@ -19,6 +19,7 @@ import com.servidores.projeto.servidores.cidade.dto.CidadeRequestDTO;
 import com.servidores.projeto.servidores.cidade.dto.CidadeResponseDTO;
 import com.servidores.projeto.servidores.cidade.service.CidadeService;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -45,7 +46,8 @@ public class CidadeController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CidadeResponseDTO>> listarTodas(Pageable pageable) {
+    public ResponseEntity<Page<CidadeResponseDTO>> listarTodas(
+            @Parameter(description = "Paginação e ordenação", example = "{\"page\": 0, \"size\": 5, \"sort\": \"id,asc\"}") Pageable pageable) {
         Page<CidadeResponseDTO> cidades = cidadeService.getAll(pageable);
         return ResponseEntity.ok(cidades);
     }

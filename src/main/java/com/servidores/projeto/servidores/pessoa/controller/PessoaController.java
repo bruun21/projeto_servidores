@@ -21,6 +21,7 @@ import com.servidores.projeto.servidores.pessoa.dto.PessoaRequestDTO;
 import com.servidores.projeto.servidores.pessoa.dto.PessoaResponseDTO;
 import com.servidores.projeto.servidores.pessoa.service.PessoaService;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -54,7 +55,8 @@ public class PessoaController {
      * Lista todas as pessoas com paginação.
      */
     @GetMapping
-    public ResponseEntity<Page<PessoaResponseDTO>> getAll(Pageable pageable) {
+    public ResponseEntity<Page<PessoaResponseDTO>> getAll(
+            @Parameter(description = "Paginação e ordenação", example = "{\"page\": 0, \"size\": 5, \"sort\": \"id,asc\"}") Pageable pageable) {
         Page<PessoaResponseDTO> pessoas = pessoaService.getAll(pageable);
         return ResponseEntity.ok(pessoas);
     }

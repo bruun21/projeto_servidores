@@ -19,6 +19,7 @@ import com.servidores.projeto.servidores.lotacao.dto.LotacaoRequestDTO;
 import com.servidores.projeto.servidores.lotacao.dto.LotacaoResponseDTO;
 import com.servidores.projeto.servidores.lotacao.service.LotacaoService;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -45,7 +46,8 @@ public class LotacaoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<LotacaoResponseDTO>> listarTodos(Pageable pageable) {
+    public ResponseEntity<Page<LotacaoResponseDTO>> listarTodos(
+            @Parameter(description = "Paginação e ordenação", example = "{\"page\": 0, \"size\": 5, \"sort\": \"id,asc\"}") Pageable pageable) {
         Page<LotacaoResponseDTO> lotacoes = lotacaoService.getAll(pageable);
         return ResponseEntity.ok(lotacoes);
     }

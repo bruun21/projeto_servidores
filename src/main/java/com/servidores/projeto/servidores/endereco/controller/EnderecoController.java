@@ -19,6 +19,7 @@ import com.servidores.projeto.servidores.endereco.dto.EnderecoRequestDTO;
 import com.servidores.projeto.servidores.endereco.dto.EnderecoResponseDTO;
 import com.servidores.projeto.servidores.endereco.service.EnderecoService;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -45,7 +46,8 @@ public class EnderecoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<EnderecoResponseDTO>> listarTodos(Pageable pageable) {
+    public ResponseEntity<Page<EnderecoResponseDTO>> listarTodos(
+            @Parameter(description = "Paginação e ordenação", example = "{\"page\": 0, \"size\": 5, \"sort\": \"id,asc\"}") Pageable pageable) {
         Page<EnderecoResponseDTO> enderecos = enderecoService.getAll(pageable);
         return ResponseEntity.ok(enderecos);
     }

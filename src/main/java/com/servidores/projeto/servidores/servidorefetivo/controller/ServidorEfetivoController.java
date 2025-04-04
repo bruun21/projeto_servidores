@@ -22,6 +22,7 @@ import com.servidores.projeto.servidores.servidorefetivo.dto.ServidorEfetivoRequ
 import com.servidores.projeto.servidores.servidorefetivo.dto.ServidorEfetivoResponseDTO;
 import com.servidores.projeto.servidores.servidorefetivo.service.ServidorEfetivoService;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -48,7 +49,10 @@ public class ServidorEfetivoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ServidorEfetivoResponseDTO>> listarTodos(Pageable pageable) {
+    public ResponseEntity<Page<ServidorEfetivoResponseDTO>> listarTodos(@Parameter(
+                description = "Paginação e ordenação", 
+                example = "{\"page\": 0, \"size\": 5, \"sort\": \"id,asc\"}"
+            ) Pageable pageable) {
         Page<ServidorEfetivoResponseDTO> servidores = servidorEfetivoService.getAll(pageable);
         return ResponseEntity.ok(servidores);
     }
@@ -69,7 +73,10 @@ public class ServidorEfetivoController {
 
     @GetMapping("/por-unidade/{unidId}")
     public ResponseEntity<Page<ServidorEfetivoLotacaoResponseDTO>> getPorUnidade(
-            @PathVariable Long unidId, Pageable pageable) {
+            @PathVariable Long unidId, @Parameter(
+                description = "Paginação e ordenação", 
+                example = "{\"page\": 0, \"size\": 5, \"sort\": \"id,asc\"}"
+            ) Pageable pageable) {
 
         Page<ServidorEfetivoLotacaoResponseDTO> response = servidorEfetivoService.findServidoresPorUnidade(unidId, pageable);
         return ResponseEntity.ok(response);
@@ -77,7 +84,10 @@ public class ServidorEfetivoController {
 
     @GetMapping("/endereco-funcional")
     public ResponseEntity<Page<EnderecoFuncionalDTO>> findByNomeParcial(
-            @RequestParam("nome") String parteNome, Pageable pageable) {
+            @RequestParam("nome") String parteNome, @Parameter(
+                description = "Paginação e ordenação", 
+                example = "{\"page\": 0, \"size\": 5, \"sort\": \"id,asc\"}"
+            ) Pageable pageable) {
         
         if (parteNome == null || parteNome.trim().isEmpty() || parteNome.length() < 3) {
             return ResponseEntity.badRequest().body(null);

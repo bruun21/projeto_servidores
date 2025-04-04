@@ -19,6 +19,7 @@ import com.servidores.projeto.servidores.servidortemporario.dto.ServidorTemporar
 import com.servidores.projeto.servidores.servidortemporario.dto.ServidorTemporarioResponseDTO;
 import com.servidores.projeto.servidores.servidortemporario.service.ServidorTemporarioService;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -45,7 +46,8 @@ public class ServidorTemporarioController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ServidorTemporarioResponseDTO>> listarTodos(Pageable pageable) {
+    public ResponseEntity<Page<ServidorTemporarioResponseDTO>> listarTodos(
+            @Parameter(description = "Paginação e ordenação", example = "{\"page\": 0, \"size\": 5, \"sort\": \"id,asc\"}") Pageable pageable) {
         Page<ServidorTemporarioResponseDTO> servidores = servidorTemporarioService.getAll(pageable);
         return ResponseEntity.ok(servidores);
     }

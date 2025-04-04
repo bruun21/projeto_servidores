@@ -19,6 +19,7 @@ import com.servidores.projeto.servidores.unidade.dto.UnidadeRequestDTO;
 import com.servidores.projeto.servidores.unidade.dto.UnidadeResponseDTO;
 import com.servidores.projeto.servidores.unidade.service.UnidadeService;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -45,7 +46,8 @@ public class UnidadeController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UnidadeResponseDTO>> getAllUnidades(Pageable pageable) {
+    public ResponseEntity<Page<UnidadeResponseDTO>> getAllUnidades(
+            @Parameter(description = "Paginação e ordenação", example = "{\"page\": 0, \"size\": 5, \"sort\": \"id,asc\"}") Pageable pageable) {
         Page<UnidadeResponseDTO> unidades = unidadeService.getAll(pageable);
         return ResponseEntity.ok(unidades);
     }
