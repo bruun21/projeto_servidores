@@ -54,7 +54,7 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - "8081:9000"  # Mapeia a porta 9000 do contêiner para 8081 do host
+      - "8081:9000"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
