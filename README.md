@@ -35,12 +35,14 @@ Este é um projeto demonstrativo desenvolvido com Spring Boot, projetado para ge
 
 2. Configure o arquivo `.env` (um arquivo de exemplo já está incluído)
 
-3. Execute com Docker Compose
+3. Certifique-se de que o serviço local do PostgreSQL esteja parado.
+
+4. Execute com Docker Compose
    ```
-   docker-compose up -d
+   docker-compose up --build
    ```
 
-4. A aplicação estará disponível em: `http://localhost:8080`
+5. A aplicação estará disponível em: `http://localhost:8080/swagger-ui.html`
    - Interface do MinIO: `http://localhost:9001`
    - Banco de dados PostgreSQL: `localhost:5432`
 
@@ -58,7 +60,7 @@ Este é um projeto demonstrativo desenvolvido com Spring Boot, projetado para ge
 
 ### Banco de Dados
 - PostgreSQL configurado tanto para ambiente Docker quanto para desenvolvimento local
-- Criação automática de tabelas (spring.jpa.hibernate.ddl-auto=update)
+- Criação automática de tabelas (spring.jpa.hibernate.ddl-auto=create)
 
 ### Segurança
 - Autenticação baseada em JWT
