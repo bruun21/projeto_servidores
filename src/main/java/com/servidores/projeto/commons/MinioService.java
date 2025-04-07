@@ -66,13 +66,15 @@ public class MinioService {
 
     public String generatePresignedUrl(String objectName, int expirySeconds) {
         try {
-            return minioClient.getPresignedObjectUrl(
+            String url = minioClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .method(Method.GET)
                             .bucket(bucketName)
                             .object(objectName)
                             .expiry(expirySeconds)
                             .build());
+
+            return url.replace("minio:9000", "localhost:8081");
         } catch (Exception e) {
             throw new RuntimeException("Erro ao gerar URL pré-assinada", e);
         }
