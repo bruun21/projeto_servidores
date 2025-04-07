@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.servidores.projeto.commons.exceptions.ModelNaoEncontradaException;
 import com.servidores.projeto.security.exception.AuthException;
 import com.servidores.projeto.security.exception.TokenRefreshException;
 
@@ -49,5 +50,12 @@ public class GlobalExceptionHandler {
     }
 
     public record ErrorResponse(String message, String errorCode) {
+    }
+
+    @ExceptionHandler(ModelNaoEncontradaException.class)
+    public ResponseEntity<ErrorResponse> handleModelNaoEncontradaException(ModelNaoEncontradaException ex) {
+        logger.warn("Recurso não encontrado: {}", ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(ex.getMessage(), "RESOURCE_NOT_FOUND"));
     }
 }
