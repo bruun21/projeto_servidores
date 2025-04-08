@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.servidores.projeto.commons.enums.ErrorType;
 import com.servidores.projeto.commons.exceptions.ModelNaoEncontradaException;
+import com.servidores.projeto.commons.utils.ModelMapperUtils;
 import com.servidores.projeto.servidores.endereco.model.EnderecoModel;
 import com.servidores.projeto.servidores.endereco.repository.EnderecoRepository;
 import com.servidores.projeto.servidores.unidade.dto.UnidadeRequestDTO;
@@ -26,6 +27,7 @@ public class UnidadeService {
     private final UnidadeRepository unidadeRepository;
     private final ModelMapper modelMapper;
     private final EnderecoRepository enderecoRepository;
+    private final ModelMapperUtils modelMapperUtils;
 
     @Transactional
     public Long create(UnidadeRequestDTO requestDTO) {
@@ -51,7 +53,7 @@ public class UnidadeService {
         UnidadeModel unidade = unidadeRepository.findById(id)
                 .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.UNIDADE_NAO_ENCONTRADA, id));
 
-        modelMapper.map(requestDTO, unidade);
+        modelMapperUtils.mapNonNullFields(requestDTO, unidade);
         return modelMapper.map(unidadeRepository.save(unidade), UnidadeResponseDTO.class);
     }
 
@@ -72,10 +74,10 @@ public class UnidadeService {
 
     public UnidadeModel fromDTO(UnidadeRequestDTO unidadeRequestDTO, EnderecoRepository enderecoRepository) {
         UnidadeModel unidade = fromDTO(unidadeRequestDTO);
-        
+
         List<EnderecoModel> enderecos = enderecoRepository.findAllById(unidadeRequestDTO.getIdEnderecos());
         unidade.getEnderecos().addAll(enderecos);
-        
+
         return unidade;
     }
 }

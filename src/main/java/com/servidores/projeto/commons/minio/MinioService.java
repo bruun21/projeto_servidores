@@ -1,4 +1,4 @@
-package com.servidores.projeto.commons;
+package com.servidores.projeto.commons.minio;
 
 import java.io.InputStream;
 import java.security.MessageDigest;

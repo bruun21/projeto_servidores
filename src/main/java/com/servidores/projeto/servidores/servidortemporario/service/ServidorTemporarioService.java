@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.servidores.projeto.commons.enums.ErrorType;
 import com.servidores.projeto.commons.exceptions.ModelNaoEncontradaException;
+import com.servidores.projeto.commons.utils.ModelMapperUtils;
 import com.servidores.projeto.servidores.pessoa.model.PessoaModel;
 import com.servidores.projeto.servidores.pessoa.repository.PessoaRepository;
 import com.servidores.projeto.servidores.servidortemporario.dto.ServidorTemporarioRequestDTO;
@@ -24,6 +25,7 @@ public class ServidorTemporarioService {
     private final ServidorTemporarioRepository servidorTemporarioRepository;
     private final PessoaRepository pessoaRepository;
     private final ModelMapper modelMapper;
+    private final ModelMapperUtils modelMapperUtils;
 
     @Transactional
     public Long create(ServidorTemporarioRequestDTO requestDTO) {
@@ -53,7 +55,7 @@ public class ServidorTemporarioService {
         ServidorTemporarioModel servidorTemporario = servidorTemporarioRepository.findById(id)
                 .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.SERV_TEMPORARIO_NAO_ENCONTRADO, id));
 
-        modelMapper.map(requestDTO, servidorTemporario);
+        modelMapperUtils.mapNonNullFields(requestDTO, servidorTemporario);
 
         if (requestDTO.getPessoaId() != null
                 && !requestDTO.getPessoaId().equals(servidorTemporario.getPessoa().getId())) {

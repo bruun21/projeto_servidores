@@ -15,9 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.servidores.projeto.commons.MinioService;
 import com.servidores.projeto.commons.enums.ErrorType;
 import com.servidores.projeto.commons.exceptions.ModelNaoEncontradaException;
+import com.servidores.projeto.commons.minio.MinioService;
+import com.servidores.projeto.commons.utils.ModelMapperUtils;
 import com.servidores.projeto.servidores.endereco.model.EnderecoModel;
 import com.servidores.projeto.servidores.lotacao.model.LotacaoModel;
 import com.servidores.projeto.servidores.pessoa.model.FotoPessoaModel;
@@ -44,6 +45,7 @@ public class ServidorEfetivoService {
     private final PessoaRepository pessoaRepository;
     private final ModelMapper modelMapper;
     private final MinioService minioService;
+    private final ModelMapperUtils modelMapperUtils;
 
     @Value("${minio.endpoint}")
     private String minioEndpoint;
@@ -74,7 +76,7 @@ public class ServidorEfetivoService {
         ServidorEfetivoModel servidorEfetivo = servidorEfetivoRepository.findById(id)
                 .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.SERV_EFETIVO_NAO_ENCONTRADO, id));
 
-        modelMapper.map(requestDTO, servidorEfetivo);
+        modelMapperUtils.mapNonNullFields(requestDTO, servidorEfetivo);
 
         if (requestDTO.getPessoaId() != null && !requestDTO.getPessoaId().equals(servidorEfetivo.getPessoa().getId())) {
             PessoaModel novaPessoa = buscarPessoaValidada(requestDTO.getPessoaId());

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.servidores.projeto.commons.enums.ErrorType;
 import com.servidores.projeto.commons.exceptions.ModelNaoEncontradaException;
+import com.servidores.projeto.commons.utils.ModelMapperUtils;
 import com.servidores.projeto.servidores.lotacao.dto.LotacaoRequestDTO;
 import com.servidores.projeto.servidores.lotacao.dto.LotacaoResponseDTO;
 import com.servidores.projeto.servidores.lotacao.model.LotacaoModel;
@@ -27,6 +28,7 @@ public class LotacaoService {
     private final PessoaRepository pessoaRepository;
     private final ModelMapper modelMapper;
     private final UnidadeRepository unidadeRepository;
+    private final ModelMapperUtils modelMapperUtils;
 
     @Transactional
     public Long create(LotacaoRequestDTO requestDTO) {
@@ -49,7 +51,7 @@ public class LotacaoService {
         LotacaoModel lotacao = lotacaoRepository.findById(id)
                 .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.LOTACAO_NAO_ENCONTRADA, id));
 
-        modelMapper.map(requestDTO, lotacao);
+        modelMapperUtils.mapNonNullFields(requestDTO, lotacao);
 
         if (requestDTO.getPessoaId() != null) {
             lotacao.setPessoa(buscarPessoaOuLancarExcecao(requestDTO.getPessoaId()));

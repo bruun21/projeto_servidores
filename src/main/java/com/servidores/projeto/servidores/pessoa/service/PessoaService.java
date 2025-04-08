@@ -12,10 +12,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.servidores.projeto.commons.MinioService;
 import com.servidores.projeto.commons.enums.ErrorType;
 import com.servidores.projeto.commons.exceptions.FileStorageException;
 import com.servidores.projeto.commons.exceptions.ModelNaoEncontradaException;
+import com.servidores.projeto.commons.minio.MinioService;
+import com.servidores.projeto.commons.utils.ModelMapperUtils;
 import com.servidores.projeto.servidores.endereco.model.EnderecoModel;
 import com.servidores.projeto.servidores.endereco.repository.EnderecoRepository;
 import com.servidores.projeto.servidores.pessoa.dto.PessoaGetDTO;
@@ -39,6 +40,7 @@ public class PessoaService {
     private final EnderecoRepository enderecoRepository;
     private final FotoPessoaRepository fotoPessoaRepository;
     private final MinioService minioService;
+    private final ModelMapperUtils modelMapperUtils;
 
     @Transactional
     public Long createPessoa(PessoaRequestDTO requestDTO) {
@@ -69,7 +71,7 @@ public class PessoaService {
         PessoaModel pessoa = pessoaRepository.findById(id)
                 .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.PESSOA_NAO_ENCONTRADA, id));
 
-        modelMapper.map(requestDTO, pessoa);
+        modelMapperUtils.mapNonNullFields(requestDTO, pessoa);
         return modelMapper.map(pessoaRepository.save(pessoa), PessoaResponseDTO.class);
     }
 

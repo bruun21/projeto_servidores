@@ -1,4 +1,4 @@
-package com.servidores.projeto.commons;
+package com.servidores.projeto.commons.minio;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

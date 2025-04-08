@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.servidores.projeto.commons.enums.ErrorType;
 import com.servidores.projeto.commons.exceptions.ModelNaoEncontradaException;
+import com.servidores.projeto.commons.utils.ModelMapperUtils;
 import com.servidores.projeto.servidores.cidade.model.CidadeModel;
 import com.servidores.projeto.servidores.cidade.repository.CidadeRepository;
 import com.servidores.projeto.servidores.endereco.dto.EnderecoRequestDTO;
@@ -24,6 +25,7 @@ public class EnderecoService {
     private final EnderecoRepository enderecoRepository;
     private final ModelMapper modelMapper;
     private final CidadeRepository cidadeRepository;
+    private final ModelMapperUtils modelMapperUtils;
 
     @Transactional
     public Long create(EnderecoRequestDTO requestDTO) {
@@ -48,7 +50,7 @@ public class EnderecoService {
         EnderecoModel endereco = enderecoRepository.findById(id)
                 .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.ENDERECO_NAO_ENCONTRADO, id));
 
-        modelMapper.map(requestDTO, endereco);
+        modelMapperUtils.mapNonNullFields(requestDTO, endereco);
         return modelMapper.map(enderecoRepository.save(endereco), EnderecoResponseDTO.class);
     }
 

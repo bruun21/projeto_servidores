@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.servidores.projeto.commons.enums.ErrorType;
 import com.servidores.projeto.commons.exceptions.ModelNaoEncontradaException;
+import com.servidores.projeto.commons.utils.ModelMapperUtils;
 import com.servidores.projeto.servidores.cidade.dto.CidadeRequestDTO;
 import com.servidores.projeto.servidores.cidade.dto.CidadeResponseDTO;
 import com.servidores.projeto.servidores.cidade.model.CidadeModel;
@@ -21,6 +22,7 @@ public class CidadeService {
 
     private final ModelMapper modelMapper;
     private final CidadeRepository cidadeRepository;
+    private final ModelMapperUtils modelMapperUtils;
 
     @Transactional
     public Long createCidade(CidadeRequestDTO requestDTO) {
@@ -44,7 +46,7 @@ public class CidadeService {
         CidadeModel cidade = cidadeRepository.findById(id)
                 .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.CIDADE_NAO_ENCONTRADA, id));
 
-        modelMapper.map(requestDTO, cidade);
+        modelMapperUtils.mapNonNullFields(requestDTO, cidade);
         return modelMapper.map(cidadeRepository.save(cidade), CidadeResponseDTO.class);
     }
 
