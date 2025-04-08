@@ -17,7 +17,6 @@ public class PessoaRequestDTO {
     @Size(max = 200, message = "Nome deve ter até 200 caracteres")
     private String nome;
 
-    @NotBlank(message = "Data de nascimento é obrigatória")
     private LocalDate dataNascimento;
 
     @NotBlank(message = "Sexo é obrigatório")

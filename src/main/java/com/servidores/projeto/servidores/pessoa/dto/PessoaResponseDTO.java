@@ -3,7 +3,6 @@ package com.servidores.projeto.servidores.pessoa.dto;
 import java.util.List;
 
 import com.servidores.projeto.servidores.endereco.dto.EnderecoResponseDTO;
-import com.servidores.projeto.servidores.lotacao.dto.LotacaoResponseDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,5 +26,4 @@ public class PessoaResponseDTO {
 
     private List<EnderecoResponseDTO> enderecos;
     private List<FotoPessoaResponseDTO> fotos;
-    private List<LotacaoResponseDTO> lotacoes;
 }

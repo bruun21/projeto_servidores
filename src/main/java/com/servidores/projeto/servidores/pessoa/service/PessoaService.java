@@ -70,9 +70,9 @@ public class PessoaService {
     public PessoaResponseDTO update(Long id, PessoaRequestDTO requestDTO) {
         PessoaModel pessoa = pessoaRepository.findById(id)
                 .orElseThrow(() -> new ModelNaoEncontradaException(ErrorType.PESSOA_NAO_ENCONTRADA, id));
-
         modelMapperUtils.mapNonNullFields(requestDTO, pessoa);
-        return modelMapper.map(pessoaRepository.save(pessoa), PessoaResponseDTO.class);
+        pessoaRepository.save(pessoa);
+        return modelMapper.map(pessoa, PessoaResponseDTO.class);
     }
 
     @Transactional
