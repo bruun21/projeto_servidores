@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.servidores.projeto.servidores.pessoa.dto.PessoaGetDTO;
 import com.servidores.projeto.servidores.pessoa.dto.PessoaRequestDTO;
 import com.servidores.projeto.servidores.pessoa.dto.PessoaResponseDTO;
 import com.servidores.projeto.servidores.pessoa.service.PessoaService;
@@ -55,9 +56,9 @@ public class PessoaController {
      * Lista todas as pessoas com paginação.
      */
     @GetMapping
-    public ResponseEntity<Page<PessoaResponseDTO>> getAll(
+    public ResponseEntity<Page<PessoaGetDTO>> getAll(
             @Parameter(description = "Paginação e ordenação", example = "{\"page\": 0, \"size\": 5, \"sort\": \"id,asc\"}") Pageable pageable) {
-        Page<PessoaResponseDTO> pessoas = pessoaService.getAll(pageable);
+        Page<PessoaGetDTO> pessoas = pessoaService.getAll(pageable);
         return ResponseEntity.ok(pessoas);
     }
 

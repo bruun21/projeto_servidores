@@ -18,6 +18,7 @@ import com.servidores.projeto.commons.exceptions.FileStorageException;
 import com.servidores.projeto.commons.exceptions.ModelNaoEncontradaException;
 import com.servidores.projeto.servidores.endereco.model.EnderecoModel;
 import com.servidores.projeto.servidores.endereco.repository.EnderecoRepository;
+import com.servidores.projeto.servidores.pessoa.dto.PessoaGetDTO;
 import com.servidores.projeto.servidores.pessoa.dto.PessoaRequestDTO;
 import com.servidores.projeto.servidores.pessoa.dto.PessoaResponseDTO;
 import com.servidores.projeto.servidores.pessoa.model.FotoPessoaModel;
@@ -58,9 +59,9 @@ public class PessoaService {
                 PessoaResponseDTO.class);
     }
 
-    public Page<PessoaResponseDTO> getAll(Pageable page) {
+    public Page<PessoaGetDTO> getAll(Pageable page) {
         return pessoaRepository.findAll(page)
-                .map(l -> modelMapper.map(l, PessoaResponseDTO.class));
+                .map(l -> modelMapper.map(l, PessoaGetDTO.class));
     }
 
     @Transactional
