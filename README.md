@@ -1,5 +1,18 @@
-## Dados Inscrição
+## Dados Inscrições
 
+ Bruno César Ramos Fraga
+
+Número da inscrição: 9965
+CPF: 35598539829
+Perfil: DESENVOLVEDOR JAVA (BACK-END) - PLENO
+
+Número da inscrição: 9978
+CPF: 35598539829
+Perfil: DESENVOLVEDOR JAVA (BACK-END) - SÊNIOR
+
+Número da inscrição: 9989
+CPF: 35598539829
+Perfil: DESENVOLVEDOR FULL STACK - SÊNIOR
 
 # Projeto Servidores
 
